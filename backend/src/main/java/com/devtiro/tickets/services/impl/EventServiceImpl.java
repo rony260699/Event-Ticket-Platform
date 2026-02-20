@@ -15,6 +15,7 @@ import com.devtiro.tickets.repositories.EventRepository;
 import com.devtiro.tickets.repositories.UserRepository;
 import com.devtiro.tickets.services.EventService;
 import jakarta.transaction.Transactional;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -40,8 +41,7 @@ public class EventServiceImpl implements EventService {
   public Event createEvent(UUID organizerId, CreateEventRequest event) {
     User organizer = userRepository.findById(organizerId)
         .orElseThrow(() -> new UserNotFoundException(
-            String.format("User with ID '%s' not found", organizerId))
-        );
+            String.format("User with ID '%s' not found", organizerId)));
 
     Event eventToCreate = new Event();
 
@@ -66,7 +66,33 @@ public class EventServiceImpl implements EventService {
     eventToCreate.setOrganizer(organizer);
     eventToCreate.setTicketTypes(ticketTypesToCreate);
 
+    validateDates(eventToCreate.getStart(), eventToCreate.getSalesStart(), eventToCreate.getSalesEnd());
+
     return eventRepository.save(eventToCreate);
+  }
+
+  private void validateDates(LocalDateTime start, LocalDateTime salesStart, LocalDateTime salesEnd) {
+    if (start == null || salesStart == null || salesEnd == null) {
+      throw new IllegalArgumentException("Event start, sales start, and sales end dates are required");
+    }
+
+    LocalDateTime now = LocalDateTime.now();
+
+    if (start.isBefore(now)) {
+      throw new IllegalArgumentException("Event start date must be in the future");
+    }
+
+    if (salesStart.isBefore(now)) {
+      throw new IllegalArgumentException("Ticket sales start date must be in the future");
+    }
+
+    if (salesEnd.isAfter(start)) {
+      throw new IllegalArgumentException("Ticket sales end date must be before event start date");
+    }
+
+    if (salesStart.isAfter(salesEnd)) {
+      throw new IllegalArgumentException("Ticket sales start date must be before ticket sales end date");
+    }
   }
 
   @Override
@@ -93,8 +119,7 @@ public class EventServiceImpl implements EventService {
     Event existingEvent = eventRepository
         .findByIdAndOrganizerId(id, organizerId)
         .orElseThrow(() -> new EventNotFoundException(
-            String.format("Event with ID '%s' does not exist", id))
-        );
+            String.format("Event with ID '%s' does not exist", id)));
 
     existingEvent.setName(event.getName());
     existingEvent.setStart(event.getStart());
@@ -104,15 +129,16 @@ public class EventServiceImpl implements EventService {
     existingEvent.setSalesEnd(event.getSalesEnd());
     existingEvent.setStatus(event.getStatus());
 
+    validateDates(existingEvent.getStart(), existingEvent.getSalesStart(), existingEvent.getSalesEnd());
+
     Set<UUID> requestTicketTypeIds = event.getTicketTypes()
         .stream()
         .map(UpdateTicketTypeRequest::getId)
         .filter(Objects::nonNull)
         .collect(Collectors.toSet());
 
-    existingEvent.getTicketTypes().removeIf(existingTicketType ->
-        !requestTicketTypeIds.contains(existingTicketType.getId())
-    );
+    existingEvent.getTicketTypes()
+        .removeIf(existingTicketType -> !requestTicketTypeIds.contains(existingTicketType.getId()));
 
     Map<UUID, TicketType> existingTicketTypesIndex = existingEvent.getTicketTypes().stream()
         .collect(Collectors.toMap(TicketType::getId, Function.identity()));
@@ -137,8 +163,7 @@ public class EventServiceImpl implements EventService {
         existingTicketType.setTotalAvailable(ticketType.getTotalAvailable());
       } else {
         throw new TicketTypeNotFoundException(String.format(
-            "Ticket type with ID '%s' does not exist", ticketType.getId()
-        ));
+            "Ticket type with ID '%s' does not exist", ticketType.getId()));
       }
     }
 
@@ -165,6 +190,5 @@ public class EventServiceImpl implements EventService {
   public Optional<Event> getPublishedEvent(UUID id) {
     return eventRepository.findByIdAndStatus(id, EventStatusEnum.PUBLISHED);
   }
-
 
 }

@@ -369,6 +369,58 @@ const DashboardManageEventPage: React.FC = () => {
       return;
     }
 
+    // Client-side Validation
+    if (!eventData.startDate || !eventData.startTime) {
+      setError("Event start date and time are required.");
+      return;
+    }
+    if (!eventData.endDate || !eventData.endTime) {
+      setError("Event end date and time are required.");
+      return;
+    }
+    if (!eventData.salesStartDate || !eventData.salesStartTime) {
+      setError("Sales start date and time are required.");
+      return;
+    }
+    if (!eventData.salesEndDate || !eventData.salesEndTime) {
+      setError("Sales end date and time are required.");
+      return;
+    }
+
+    const start = combineDateTime(eventData.startDate, eventData.startTime);
+    const end = combineDateTime(eventData.endDate, eventData.endTime);
+    const salesStart = combineDateTime(eventData.salesStartDate, eventData.salesStartTime);
+    const salesEnd = combineDateTime(eventData.salesEndDate, eventData.salesEndTime);
+    const now = new Date();
+
+    if (start < now) {
+      setError("Event start date must be in the future.");
+      return;
+    }
+
+    if (end <= start) {
+      setError("Event end date must be after start date.");
+      return;
+    }
+
+    // Sales start can be now or future, but let's say roughly now.
+    // Allow a small buffer or just check if it's not in the distant past if needed.
+    // Strict requirement: Sales Start >= Now (approx)
+    if (salesStart < new Date(now.getTime() - 60000)) { // Allow 1 min buffer
+      setError("Sales start date must be in the future or present.");
+      return;
+    }
+
+    if (salesEnd <= salesStart) {
+      setError("Sales end date must be after sales start date.");
+      return;
+    }
+
+    if (salesEnd > start) {
+      setError("Sales end date must be before event start date.");
+      return;
+    }
+
     if (isEditMode) {
       if (!eventData.id) {
         setError("Event does not have an ID");
@@ -670,9 +722,9 @@ const DashboardManageEventPage: React.FC = () => {
                           setCurrentTicketType(
                             currentTicketType
                               ? {
-                                  ...currentTicketType,
-                                  price: Number.parseFloat(e.target.value),
-                                }
+                                ...currentTicketType,
+                                price: Number.parseFloat(e.target.value),
+                              }
                               : undefined,
                           )
                         }
@@ -693,11 +745,11 @@ const DashboardManageEventPage: React.FC = () => {
                           setCurrentTicketType(
                             currentTicketType
                               ? {
-                                  ...currentTicketType,
-                                  totalAvailable: Number.parseFloat(
-                                    e.target.value,
-                                  ),
-                                }
+                                ...currentTicketType,
+                                totalAvailable: Number.parseFloat(
+                                  e.target.value,
+                                ),
+                              }
                               : undefined,
                           )
                         }
@@ -717,9 +769,9 @@ const DashboardManageEventPage: React.FC = () => {
                         setCurrentTicketType(
                           currentTicketType
                             ? {
-                                ...currentTicketType,
-                                description: e.target.value,
-                              }
+                              ...currentTicketType,
+                              description: e.target.value,
+                            }
                             : undefined,
                         )
                       }

@@ -51,7 +51,7 @@ const AttendeeLandingPage: React.FC = () => {
     }
 
     try {
-      setPublishedEvents(await searchPublishedEvents(query, page));
+      setPublishedEvents(await searchPublishedEvents(query || "", page));
     } catch (err) {
       if (err instanceof Error) {
         setError(err.message);
@@ -102,6 +102,12 @@ const AttendeeLandingPage: React.FC = () => {
           <div className="flex gap-4">
             <Button className="cursor-pointer" onClick={() => signinRedirect()}>
               Log in
+            </Button>
+            <Button
+              className="cursor-pointer bg-transparent border border-purple-500 text-purple-500 hover:bg-purple-500 hover:text-white"
+              onClick={() => signinRedirect({ prompt: "create" })}
+            >
+              Create Account
             </Button>
           </div>
         )}
