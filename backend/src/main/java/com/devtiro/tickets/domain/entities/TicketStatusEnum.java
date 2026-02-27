@@ -1,5 +1,5 @@
 package com.devtiro.tickets.domain.entities;
 
 public enum TicketStatusEnum {
-  PURCHASED, CANCELLED
+  PURCHASED, CANCELLED, REFUND_PENDING, REFUNDED
 }

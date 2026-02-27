@@ -143,6 +143,7 @@ interface EventData {
   salesEndTime: string | undefined;
   ticketTypes: TicketTypeData[];
   status: EventStatusEnum;
+  category: string;
   createdAt: Date | undefined;
   updatedAt: Date | undefined;
 }
@@ -167,6 +168,7 @@ const DashboardManageEventPage: React.FC = () => {
     salesEndTime: undefined,
     ticketTypes: [],
     status: EventStatusEnum.DRAFT,
+    category: "",
     createdAt: undefined,
     updatedAt: undefined,
   });
@@ -212,6 +214,7 @@ const DashboardManageEventPage: React.FC = () => {
             ? formatTimeFromDate(new Date(event.salesEnd))
             : undefined,
           status: event.status,
+          category: event.category || "",
           ticketTypes: event.ticketTypes.map((ticket) => ({
             id: ticket.id,
             name: ticket.name,
@@ -294,6 +297,7 @@ const DashboardManageEventPage: React.FC = () => {
           ? combineDateTime(eventData.salesEndDate, eventData.salesEndTime)
           : undefined,
       status: eventData.status,
+      category: eventData.category,
       ticketTypes: ticketTypes,
     };
 
@@ -343,6 +347,7 @@ const DashboardManageEventPage: React.FC = () => {
           ? combineDateTime(eventData.salesEndDate, eventData.salesEndTime)
           : undefined,
       status: eventData.status,
+      category: eventData.category,
       ticketTypes: ticketTypes,
     };
 
@@ -530,6 +535,32 @@ const DashboardManageEventPage: React.FC = () => {
             </div>
             <p className="text-gray-400 text-xs">
               This is the public name of your event.
+            </p>
+          </div>
+
+          {/* Category */}
+          <div>
+            <label htmlFor="event-category" className="text-sm font-medium">
+              Category
+            </label>
+            <Select
+              value={eventData.category}
+              onValueChange={(value) => updateField("category", value)}
+            >
+              <SelectTrigger className="bg-gray-900 border-gray-700 text-white w-full">
+                <SelectValue placeholder="Select a Category" />
+              </SelectTrigger>
+              <SelectContent className="bg-gray-900 border-gray-700 text-white">
+                <SelectItem value="Music">Music</SelectItem>
+                <SelectItem value="Comedy">Comedy</SelectItem>
+                <SelectItem value="Tech">Tech</SelectItem>
+                <SelectItem value="Business">Business</SelectItem>
+                <SelectItem value="Sports">Sports</SelectItem>
+                <SelectItem value="Other">Other</SelectItem>
+              </SelectContent>
+            </Select>
+            <p className="text-gray-400 text-xs">
+              The category helps users find your event.
             </p>
           </div>
 

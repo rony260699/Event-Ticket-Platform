@@ -21,6 +21,11 @@ const PublishedEventCard: React.FC<PublishedEventCardProperties> = ({
         </div>
         <div className="px-2">
           <h3 className="text-lg font-medium">{publishedEvent.name}</h3>
+          {publishedEvent.category && (
+            <div className="inline-block bg-purple-100 text-purple-800 text-xs px-2 py-0.5 rounded-full font-medium mb-2">
+              {publishedEvent.category}
+            </div>
+          )}
         </div>
         <div className="px-2">
           <div className="flex gap-2 text-sm mb-2 text-gray-500">

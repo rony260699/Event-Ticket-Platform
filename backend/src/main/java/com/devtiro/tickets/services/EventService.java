@@ -2,6 +2,7 @@ package com.devtiro.tickets.services;
 
 import com.devtiro.tickets.domain.CreateEventRequest;
 import com.devtiro.tickets.domain.UpdateEventRequest;
+import com.devtiro.tickets.domain.dtos.EventStatsResponseDto;
 import com.devtiro.tickets.domain.entities.Event;
 import java.util.Optional;
 import java.util.UUID;
@@ -22,7 +23,9 @@ public interface EventService {
 
   Page<Event> listPublishedEvents(Pageable pageable);
 
-  Page<Event> searchPublishedEvents(String query, Pageable pageable);
+  Page<Event> searchPublishedEvents(String query, String category, Pageable pageable);
 
   Optional<Event> getPublishedEvent(UUID id);
+
+  EventStatsResponseDto getEventStats(UUID organizerId, UUID id);
 }

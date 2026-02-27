@@ -24,8 +24,7 @@ public class TicketTypeController {
   @PostMapping(path = "/{ticketTypeId}/tickets")
   public ResponseEntity<Void> purchaseTicket(
       @AuthenticationPrincipal Jwt jwt,
-      @PathVariable UUID ticketTypeId
-  ) {
+      @PathVariable UUID ticketTypeId) {
     ticketTypeService.purchaseTicket(parseUserId(jwt), ticketTypeId);
     return new ResponseEntity<>(HttpStatus.NO_CONTENT);
   }

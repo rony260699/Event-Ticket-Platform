@@ -26,6 +26,7 @@ import {
 import { deleteEvent, listEvents } from "@/lib/api";
 import {
   AlertCircle,
+  BarChart3,
   Calendar,
   Clock,
   Edit,
@@ -247,6 +248,14 @@ const DashboardListEventsPage: React.FC = () => {
                     className="bg-gray-700 hover:bg-gray-500 cursor-pointer"
                   >
                     <Edit />
+                  </Button>
+                </Link>
+                <Link to={`/dashboard/events/${eventItem.id}/analytics`}>
+                  <Button
+                    type="button"
+                    className="bg-blue-700 hover:bg-blue-500 cursor-pointer"
+                  >
+                    <BarChart3 className="h-4 w-4" />
                   </Button>
                 </Link>
                 <Button

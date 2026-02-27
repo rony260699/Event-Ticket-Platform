@@ -9,6 +9,14 @@ import { listPublishedEvents, searchPublishedEvents } from "@/lib/api";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import PublishedEventCard from "@/components/published-event-card";
 import { SimplePagination } from "@/components/simple-pagination";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { X } from "lucide-react";
 
 const AttendeeLandingPage: React.FC = () => {
   const { isAuthenticated, isLoading, signinRedirect, signoutRedirect } =
@@ -22,14 +30,15 @@ const AttendeeLandingPage: React.FC = () => {
   >();
   const [error, setError] = useState<string | undefined>();
   const [query, setQuery] = useState<string | undefined>();
+  const [category, setCategory] = useState<string>("");
 
   useEffect(() => {
-    if (query && query.length > 0) {
+    if ((query && query.length > 0) || (category && category.length > 0)) {
       queryPublishedEvents();
     } else {
       refreshPublishedEvents();
     }
-  }, [page]);
+  }, [page, category]);
 
   const refreshPublishedEvents = async () => {
     try {
@@ -46,12 +55,14 @@ const AttendeeLandingPage: React.FC = () => {
   };
 
   const queryPublishedEvents = async () => {
-    if (!query) {
+    if (!query && !category) {
       await refreshPublishedEvents();
     }
 
     try {
-      setPublishedEvents(await searchPublishedEvents(query || "", page));
+      setPublishedEvents(
+        await searchPublishedEvents(query || "", category, page),
+      );
     } catch (err) {
       if (err instanceof Error) {
         setError(err.message);
@@ -119,15 +130,43 @@ const AttendeeLandingPage: React.FC = () => {
             <h1 className="text-2xl font-bold mb-4">
               Find Tickets to Your Next Event
             </h1>
-            <div className="flex gap-2 max-w-lg">
-              <Input
-                className="bg-white text-black"
-                value={query}
-                onChange={(e) => setQuery(e.target.value)}
-              />
-              <Button onClick={queryPublishedEvents}>
-                <Search />
-              </Button>
+            <div className="flex flex-col gap-2 max-w-lg">
+              <div className="flex gap-2">
+                <Input
+                  className="bg-white text-black"
+                  value={query}
+                  placeholder="Search events..."
+                  onChange={(e) => setQuery(e.target.value)}
+                />
+                <Button onClick={queryPublishedEvents}>
+                  <Search />
+                </Button>
+              </div>
+              <div className="flex gap-2 items-center">
+                <Select value={category} onValueChange={setCategory}>
+                  <SelectTrigger className="bg-white text-black w-[200px]">
+                    <SelectValue placeholder="All Categories" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="Music">Music</SelectItem>
+                    <SelectItem value="Comedy">Comedy</SelectItem>
+                    <SelectItem value="Tech">Tech</SelectItem>
+                    <SelectItem value="Business">Business</SelectItem>
+                    <SelectItem value="Sports">Sports</SelectItem>
+                    <SelectItem value="Other">Other</SelectItem>
+                  </SelectContent>
+                </Select>
+                {category && (
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => setCategory("")}
+                    className="text-white hover:bg-gray-800"
+                  >
+                    <X className="h-4 w-4" />
+                  </Button>
+                )}
+              </div>
             </div>
           </div>
         </div>

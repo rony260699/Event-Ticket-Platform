@@ -15,11 +15,13 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.CacheControl;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -35,19 +37,24 @@ public class TicketController {
   @GetMapping
   public Page<ListTicketResponseDto> listTickets(
       @AuthenticationPrincipal Jwt jwt,
-      Pageable pageable
-  ) {
+      Pageable pageable) {
     return ticketService.listTicketsForUser(
         parseUserId(jwt),
-        pageable
-    ).map(ticketMapper::toListTicketResponseDto);
+        pageable).map(ticketMapper::toListTicketResponseDto);
+  }
+
+  @PostMapping(path = "/{ticketId}/cancel")
+  public ResponseEntity<Void> cancelTicket(
+      @AuthenticationPrincipal Jwt jwt,
+      @PathVariable UUID ticketId) {
+    ticketService.cancelTicket(parseUserId(jwt), ticketId);
+    return new ResponseEntity<>(HttpStatus.NO_CONTENT);
   }
 
   @GetMapping(path = "/{ticketId}")
   public ResponseEntity<GetTicketResponseDto> getTicket(
       @AuthenticationPrincipal Jwt jwt,
-      @PathVariable UUID ticketId
-  ) {
+      @PathVariable UUID ticketId) {
     return ticketService
         .getTicketForUser(parseUserId(jwt), ticketId)
         .map(ticketMapper::toGetTicketResponseDto)
@@ -58,12 +65,10 @@ public class TicketController {
   @GetMapping(path = "/{ticketId}/qr-codes")
   public ResponseEntity<byte[]> getTicketQrCode(
       @AuthenticationPrincipal Jwt jwt,
-      @PathVariable UUID ticketId
-  ) {
+      @PathVariable UUID ticketId) {
     byte[] qrCodeImage = qrCodeService.getQrCodeImageForUserAndTicket(
         parseUserId(jwt),
-        ticketId
-    );
+        ticketId);
 
     HttpHeaders headers = new HttpHeaders();
     headers.setContentType(MediaType.IMAGE_PNG);

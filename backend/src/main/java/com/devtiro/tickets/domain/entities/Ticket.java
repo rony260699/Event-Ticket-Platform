@@ -58,6 +58,9 @@ public class Ticket {
   @OneToMany(mappedBy = "ticket", cascade = CascadeType.ALL)
   private List<QrCode> qrCodes = new ArrayList<>();
 
+  @Column(name = "price_paid", nullable = false)
+  private Double pricePaid;
+
   @CreatedDate
   @Column(name = "created_at", updatable = false, nullable = false)
   private LocalDateTime createdAt;

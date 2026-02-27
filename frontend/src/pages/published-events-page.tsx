@@ -116,27 +116,41 @@ const PublishedEventsPage: React.FC = () => {
         <div className="flex gap-2">
           {/* Left */}
           <div className="w-1/2">
-            {publishedEvent?.ticketTypes?.map((ticketType) => (
-              <Card
-                className="bg-gray-800 border-gray-600 hover:bg-gray-700 text-white cursor-pointer gap-0 mb-2"
-                key={ticketType.id}
-                onClick={() => setSelectedTicketType(ticketType)}
-              >
-                <CardHeader>
-                  <div className="flex justify-between items-center">
-                    <h3 className="text-lg font-semibold">{ticketType.name}</h3>
-                    <span className="text-xl font-bold ">
-                      ${ticketType.price}
-                    </span>
-                  </div>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-gray-300 text-sm">
-                    {ticketType.description}
-                  </p>
-                </CardContent>
-              </Card>
-            ))}
+            {publishedEvent?.ticketTypes?.map((ticketType) => {
+              const isSoldOut = ticketType.availableTickets !== undefined && ticketType.availableTickets !== -1 && ticketType.availableTickets <= 0;
+              return (
+                <Card
+                  className={`bg-gray-800 border-gray-600 hover:bg-gray-700 text-white cursor-pointer gap-0 mb-2 ${isSoldOut ? "opacity-60" : ""}`}
+                  key={ticketType.id}
+                  onClick={() => setSelectedTicketType(ticketType)}
+                >
+                  <CardHeader>
+                    <div className="flex justify-between items-center">
+                      <h3 className="text-lg font-semibold">{ticketType.name}</h3>
+                      <div className="flex items-center gap-2">
+                        {isSoldOut ? (
+                          <span className="text-xs font-bold bg-red-600 text-white px-2 py-1 rounded">
+                            SOLD OUT
+                          </span>
+                        ) : ticketType.availableTickets !== undefined && ticketType.availableTickets !== -1 ? (
+                          <span className="text-sm text-yellow-400 font-medium">
+                            {ticketType.availableTickets} left
+                          </span>
+                        ) : null}
+                        <span className="text-xl font-bold ">
+                          ${ticketType.price}
+                        </span>
+                      </div>
+                    </div>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-gray-300 text-sm">
+                      {ticketType.description}
+                    </p>
+                  </CardContent>
+                </Card>
+              );
+            })}
           </div>
 
           {/* Right */}
@@ -148,18 +162,40 @@ const PublishedEventsPage: React.FC = () => {
                   ${selectedTicketType?.price}
                 </span>
               </div>
+              {selectedTicketType?.availableTickets !== undefined && selectedTicketType.availableTickets !== -1 && (
+                <div className="mb-4">
+                  {selectedTicketType.availableTickets > 0 ? (
+                    <span className="text-sm text-yellow-400 font-medium">
+                      🎟️ {selectedTicketType.availableTickets} tickets remaining
+                    </span>
+                  ) : (
+                    <span className="text-sm text-red-400 font-bold">
+                      ❌ Sold Out
+                    </span>
+                  )}
+                </div>
+              )}
               <div className="mb-6">
                 <p className="text-gray-300">
                   {selectedTicketType?.description}
                 </p>
               </div>
-              <Link
-                to={`/events/${publishedEvent?.id}/purchase/${selectedTicketType?.id}`}
-              >
-                <Button className="w-full bg-purple-600 hover:bg-purple-700 cursor-pointer">
-                  Purchase Ticket
+              {selectedTicketType?.availableTickets !== undefined && selectedTicketType.availableTickets !== -1 && selectedTicketType.availableTickets <= 0 ? (
+                <Button
+                  className="w-full bg-gray-600 text-gray-400 cursor-not-allowed"
+                  disabled
+                >
+                  Sold Out
                 </Button>
-              </Link>
+              ) : (
+                <Link
+                  to={`/events/${publishedEvent?.id}/purchase/${selectedTicketType?.id}`}
+                >
+                  <Button className="w-full bg-purple-600 hover:bg-purple-700 cursor-pointer">
+                    Purchase Ticket
+                  </Button>
+                </Link>
+              )}
             </div>
           </div>
         </div>

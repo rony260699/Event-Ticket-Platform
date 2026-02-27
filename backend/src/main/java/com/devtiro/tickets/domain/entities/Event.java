@@ -63,6 +63,9 @@ public class Event {
   @Enumerated(EnumType.STRING)
   private EventStatusEnum status;
 
+  @Column(name = "category")
+  private String category;
+
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "organizer_id")
   private User organizer;
@@ -94,7 +97,7 @@ public class Event {
         event.start) && Objects.equals(end, event.end) && Objects.equals(venue, event.venue)
         && Objects.equals(salesStart, event.salesStart) && Objects.equals(salesEnd, event.salesEnd)
         && status == event.status && Objects.equals(createdAt, event.createdAt) && Objects.equals(
-        updatedAt, event.updatedAt);
+            updatedAt, event.updatedAt);
   }
 
   @Override

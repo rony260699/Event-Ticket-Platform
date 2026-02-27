@@ -1,17 +1,16 @@
 package com.devtiro.tickets.domain.dtos;
 
-import java.util.UUID;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class ListTicketTicketTypeResponseDto {
-  private UUID id;
-  private String name;
-  private String eventName;
-  private Double price;
-
+public class EventStatsResponseDto {
+    private long totalTicketsSold;
+    private double totalRevenue;
+    private double checkInPercentage;
 }
