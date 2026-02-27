@@ -17,6 +17,7 @@ import DashboardPage from "./pages/dashboard-page.tsx";
 import DashboardViewTicketPage from "./pages/dashboard-view-ticket-page.tsx";
 import DashboardValidateQrPage from "./pages/dashboard-validate-qr-page.tsx";
 import OrganizerAnalyticsPage from "./pages/organizer-analytics-page.tsx";
+import OrganizerAttendeesPage from "./pages/organizer-attendees-page.tsx";
 
 const router = createBrowserRouter([
   {
@@ -108,6 +109,14 @@ const router = createBrowserRouter([
     element: (
       <ProtectedRoute>
         <OrganizerAnalyticsPage />
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: "/dashboard/events/:eventId/attendees",
+    element: (
+      <ProtectedRoute>
+        <OrganizerAttendeesPage />
       </ProtectedRoute>
     ),
   },

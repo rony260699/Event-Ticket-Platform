@@ -1,11 +1,13 @@
 package com.devtiro.tickets.repositories;
 
 import com.devtiro.tickets.domain.entities.Ticket;
+import com.devtiro.tickets.domain.entities.TicketValidationStatusEnum;
 import java.util.Optional;
 import java.util.UUID;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -15,7 +17,7 @@ public interface TicketRepository extends JpaRepository<Ticket, UUID> {
 
   long countByTicketTypeEventId(UUID eventId);
 
-  @org.springframework.data.jpa.repository.Query("SELECT SUM(t.pricePaid) FROM Ticket t WHERE t.ticketType.event.id = :eventId")
+  @Query("SELECT SUM(t.pricePaid) FROM Ticket t WHERE t.ticketType.event.id = :eventId")
   Double sumPricePaidByEventId(UUID eventId);
 
   long countByTicketTypeEventIdAndStatus(UUID eventId, com.devtiro.tickets.domain.entities.TicketStatusEnum status);
@@ -23,4 +25,9 @@ public interface TicketRepository extends JpaRepository<Ticket, UUID> {
   Page<Ticket> findByPurchaserId(UUID purchaserId, Pageable pageable);
 
   Optional<Ticket> findByIdAndPurchaserId(UUID id, UUID purchaserId);
+
+  Page<Ticket> findByTicketTypeEventId(UUID eventId, Pageable pageable);
+
+  @Query("SELECT COUNT(DISTINCT t) FROM Ticket t JOIN t.validations v WHERE t.ticketType.event.id = :eventId AND v.status = :status")
+  long countCheckedInByEventId(UUID eventId, TicketValidationStatusEnum status);
 }

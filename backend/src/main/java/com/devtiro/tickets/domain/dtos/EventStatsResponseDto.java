@@ -13,4 +13,5 @@ public class EventStatsResponseDto {
     private long totalTicketsSold;
     private double totalRevenue;
     private double checkInPercentage;
+    private long totalCheckedIn;
 }

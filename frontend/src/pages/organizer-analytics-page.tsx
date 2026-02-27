@@ -1,12 +1,13 @@
 import NavBar from "@/components/nav-bar";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { EventStats } from "@/domain/domain";
 import { getEventStats } from "@/lib/api";
-import { AlertCircle, ArrowLeft, BarChart3, DollarSign, Ticket, Users } from "lucide-react";
+import { AlertCircle, ArrowLeft, ArrowRight, BarChart3, DollarSign, Ticket, Users } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useAuth } from "react-oidc-context";
-import { useNavigate, useParams } from "react-router";
+import { Link, useNavigate, useParams } from "react-router";
 
 const OrganizerAnalyticsPage: React.FC = () => {
     const { user } = useAuth();
@@ -82,59 +83,85 @@ const OrganizerAnalyticsPage: React.FC = () => {
                 </div>
 
                 {/* Stats Grid */}
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     <Card className="bg-gray-900 border-gray-800 text-white">
                         <CardHeader className="flex flex-row items-center justify-between pb-2">
-                            <CardTitle className="text-sm font-medium text-gray-400">Total Tickets Sold</CardTitle>
+                            <CardTitle className="text-sm font-medium text-gray-400">Tickets Sold</CardTitle>
                             <Ticket className="h-5 w-5 text-purple-400" />
                         </CardHeader>
                         <CardContent>
                             <div className="text-4xl font-bold">{stats?.totalTicketsSold}</div>
-                            <p className="text-xs text-gray-500 mt-1">+12% from last week</p>
+                            <p className="text-xs text-gray-500 mt-1">Total revenue from all tickets</p>
+                        </CardContent>
+                    </Card>
+
+                    <Card className="bg-gray-900 border-gray-800 text-white">
+                        <CardHeader className="flex flex-row items-center justify-between pb-2">
+                            <CardTitle className="text-sm font-medium text-gray-400">Actual Attendees</CardTitle>
+                            <Users className="h-5 w-5 text-green-400" />
+                        </CardHeader>
+                        <CardContent>
+                            <div className="text-4xl font-bold text-green-400">{stats?.totalCheckedIn}</div>
+                            <p className="text-xs text-gray-500 mt-1">
+                                {stats?.checkInPercentage.toFixed(1)}% of purchasers attended
+                            </p>
                         </CardContent>
                     </Card>
 
                     <Card className="bg-gray-900 border-gray-800 text-white">
                         <CardHeader className="flex flex-row items-center justify-between pb-2">
                             <CardTitle className="text-sm font-medium text-gray-400">Total Revenue</CardTitle>
-                            <DollarSign className="h-5 w-5 text-green-400" />
+                            <DollarSign className="h-5 w-5 text-yellow-400" />
                         </CardHeader>
                         <CardContent>
                             <div className="text-4xl font-bold">${stats?.totalRevenue.toLocaleString()}</div>
                             <p className="text-xs text-gray-500 mt-1">Direct sales and processing</p>
                         </CardContent>
                     </Card>
+                </div>
 
-                    <Card className="bg-gray-900 border-gray-800 text-white">
-                        <CardHeader className="flex flex-row items-center justify-between pb-2">
-                            <CardTitle className="text-sm font-medium text-gray-400">Check-in Rate</CardTitle>
-                            <Users className="h-5 w-5 text-blue-400" />
-                        </CardHeader>
-                        <CardContent>
-                            <div className="text-4xl font-bold">{stats?.checkInPercentage.toFixed(1)}%</div>
-                            <div className="w-full bg-gray-800 rounded-full h-2 mt-4">
+                {/* Attendance Analysis Section */}
+                <Card className="bg-gray-900 border-gray-800 text-white overflow-hidden">
+                    <CardHeader>
+                        <CardTitle className="text-xl">Attendance Analysis</CardTitle>
+                        <p className="text-sm text-gray-400">
+                            Comparison between tickets sold and actual event attendance.
+                        </p>
+                    </CardHeader>
+                    <CardContent className="space-y-8">
+                        <div className="space-y-4">
+                            <div className="flex items-center justify-between text-sm">
+                                <span className="text-gray-400">Check-in Progress</span>
+                                <span className="font-bold text-purple-400">
+                                    {stats?.totalCheckedIn} / {stats?.totalTicketsSold}
+                                </span>
+                            </div>
+                            <div className="h-4 w-full bg-gray-800 rounded-full overflow-hidden p-1 border border-gray-700">
                                 <div
-                                    className="bg-blue-500 h-2 rounded-full"
+                                    className="h-full bg-gradient-to-r from-purple-600 to-blue-500 rounded-full transition-all duration-1000 ease-in-out"
                                     style={{ width: `${stats?.checkInPercentage}%` }}
                                 ></div>
                             </div>
-                        </CardContent>
-                    </Card>
-                </div>
+                        </div>
 
-                {/* Placeholder for future Charts */}
-                <Card className="bg-gray-900 border-gray-800 text-white p-8">
-                    <div className="flex flex-col items-center justify-center py-12 text-center space-y-4">
-                        <div className="p-4 bg-gray-800 rounded-full">
-                            <BarChart3 className="h-12 w-12 text-gray-500" />
+                        <div className="bg-gray-800/50 rounded-xl p-8 flex flex-col items-center text-center space-y-6 border border-gray-700/50">
+                            <div className="p-4 bg-purple-500/10 rounded-full">
+                                <Users className="h-10 w-10 text-purple-500" />
+                            </div>
+                            <div className="space-y-2">
+                                <h3 className="text-xl font-bold">Attendee Insights</h3>
+                                <p className="text-gray-400 max-w-sm mx-auto">
+                                    Get the full list of ticket purchasers, track their scan status, and view check-in timestamps.
+                                </p>
+                            </div>
+                            <Button asChild className="bg-purple-600 hover:bg-purple-700 text-white font-semibold px-8 py-6 rounded-lg transition-all group">
+                                <Link to={`/dashboard/events/${id}/attendees`} className="flex items-center gap-2">
+                                    View Full Attendee List
+                                    <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1" />
+                                </Link>
+                            </Button>
                         </div>
-                        <div>
-                            <h3 className="text-xl font-bold">More Insights Coming Soon</h3>
-                            <p className="text-gray-400 max-w-md mx-auto">
-                                We're building advanced time-series analysis and demographic charts to help you grow your audience.
-                            </p>
-                        </div>
-                    </div>
+                    </CardContent>
                 </Card>
             </div>
         </div>

@@ -32,7 +32,8 @@ import {
   Edit,
   MapPin,
   Tag,
-  Trash,
+  Trash2,
+  Users,
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useAuth } from "react-oidc-context";
@@ -258,12 +259,21 @@ const DashboardListEventsPage: React.FC = () => {
                     <BarChart3 className="h-4 w-4" />
                   </Button>
                 </Link>
+                <Link to={`/dashboard/events/${eventItem.id}/attendees`}>
+                  <Button
+                    type="button"
+                    className="bg-indigo-700 hover:bg-indigo-500 cursor-pointer"
+                    title="View Attendees"
+                  >
+                    <Users className="h-4 w-4" />
+                  </Button>
+                </Link>
                 <Button
                   type="button"
                   className="bg-red-700/80 hover:bg-red-500 cursor-pointer"
                   onClick={() => handleOpenDeleteEventDialog(eventItem)}
                 >
-                  <Trash />
+                  <Trash2 />
                 </Button>
               </CardFooter>
             </Card>

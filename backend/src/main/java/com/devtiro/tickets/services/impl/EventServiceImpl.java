@@ -1,5 +1,6 @@
 package com.devtiro.tickets.services.impl;
 
+import lombok.extern.slf4j.Slf4j;
 import com.devtiro.tickets.domain.CreateEventRequest;
 import com.devtiro.tickets.domain.UpdateEventRequest;
 import com.devtiro.tickets.domain.UpdateTicketTypeRequest;
@@ -16,6 +17,9 @@ import com.devtiro.tickets.repositories.TicketRepository;
 import com.devtiro.tickets.repositories.UserRepository;
 import com.devtiro.tickets.services.EventService;
 import com.devtiro.tickets.domain.dtos.EventStatsResponseDto;
+import com.devtiro.tickets.domain.dtos.EventAttendeeDto;
+import com.devtiro.tickets.domain.entities.TicketValidationStatusEnum;
+import com.devtiro.tickets.domain.entities.TicketValidation;
 import com.devtiro.tickets.domain.entities.TicketStatusEnum;
 import jakarta.transaction.Transactional;
 import java.time.LocalDateTime;
@@ -34,6 +38,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class EventServiceImpl implements EventService {
 
   private final UserRepository userRepository;
@@ -190,13 +195,6 @@ public class EventServiceImpl implements EventService {
   @Override
   public Page<Event> searchPublishedEvents(String query, String category, Pageable pageable) {
     if (category != null && !category.isEmpty()) {
-      // If category is provided, we can either search within that category or just
-      // filter by it.
-      // For now, let's just use the searchTerm search which already includes category
-      // in its vector.
-      // However, if we want strict category filtering, we might need a different
-      // query.
-      // Let's assume the user wants to search *within* a category if one is selected.
       String fullQuery = query + " " + category;
       return eventRepository.searchEvents(fullQuery.trim(), pageable);
     }
@@ -210,34 +208,51 @@ public class EventServiceImpl implements EventService {
 
   @Override
   public EventStatsResponseDto getEventStats(UUID organizerId, UUID id) {
+    log.info("Fetching stats for event ID: {} for organizer: {}", id, organizerId);
     if (!eventRepository.existsByIdAndOrganizerId(id, organizerId)) {
+      log.warn("Event {} not found for organizer {}", id, organizerId);
       throw new EventNotFoundException(String.format("Event with ID '%s' not found for organizer", id));
     }
 
     long totalTicketsSold = ticketRepository.countByTicketTypeEventId(id);
     Double totalRevenue = ticketRepository.sumPricePaidByEventId(id);
-    long validatedTickets = ticketRepository.countByTicketTypeEventIdAndStatus(id, TicketStatusEnum.PURCHASED); // Assuming
-                                                                                                                // PURCHASED
-                                                                                                                // means
-                                                                                                                // not
-                                                                                                                // cancelled,
-                                                                                                                // but
-                                                                                                                // we
-                                                                                                                // need
-                                                                                                                // a
-                                                                                                                // CHECKED_IN
-                                                                                                                // status
-                                                                                                                // ideally.
-    // Wait, let's check Ticket entity for a checkedIn flag.
+    long totalCheckedIn = ticketRepository.countCheckedInByEventId(id, TicketValidationStatusEnum.VALID);
 
-    // For now, let's just use what we have. If no tickets sold, checkInPercentage
-    // is 0.
-    double checkInPercentage = totalTicketsSold > 0 ? (double) validatedTickets / totalTicketsSold * 100 : 0;
+    log.info("Stats fetched: sold={}, revenue={}, checkedIn={}", totalTicketsSold, totalRevenue, totalCheckedIn);
+
+    double checkInPercentage = totalTicketsSold > 0 ? (double) totalCheckedIn / totalTicketsSold * 100 : 0;
 
     return EventStatsResponseDto.builder()
         .totalTicketsSold(totalTicketsSold)
         .totalRevenue(totalRevenue != null ? totalRevenue : 0.0)
         .checkInPercentage(checkInPercentage)
+        .totalCheckedIn(totalCheckedIn)
         .build();
+  }
+
+  @Override
+  public Page<EventAttendeeDto> getEventAttendees(UUID organizerId, UUID eventId, Pageable pageable) {
+    if (!eventRepository.existsByIdAndOrganizerId(eventId, organizerId)) {
+      throw new EventNotFoundException(String.format("Event with ID '%s' not found for organizer", eventId));
+    }
+
+    return ticketRepository.findByTicketTypeEventId(eventId, pageable).map(ticket -> {
+      TicketValidation firstValid = ticket.getValidations().stream()
+          .filter(v -> TicketValidationStatusEnum.VALID.equals(v.getStatus()))
+          .findFirst()
+          .orElse(null);
+
+      return EventAttendeeDto.builder()
+          .ticketId(ticket.getId())
+          .purchaserName(ticket.getPurchaser().getName())
+          .purchaserEmail(ticket.getPurchaser().getEmail())
+          .ticketTypeName(ticket.getTicketType().getName())
+          .pricePaid(ticket.getPricePaid())
+          .purchasedAt(ticket.getCreatedAt())
+          .status(ticket.getStatus())
+          .checkedIn(firstValid != null)
+          .checkedInAt(firstValid != null ? firstValid.getCreatedAt() : null)
+          .build();
+    });
   }
 }

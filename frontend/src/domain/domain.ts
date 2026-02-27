@@ -140,6 +140,8 @@ export interface SpringBootPagination<T> {
   empty: boolean; // Whether the current page has no items
 }
 
+export type Page<T> = SpringBootPagination<T>;
+
 export interface PublishedEventTicketTypeDetails {
   id: string;
   name: string;
@@ -213,5 +215,17 @@ export interface TicketValidationResponse {
 export interface EventStats {
   totalTicketsSold: number;
   totalRevenue: number;
+  totalCheckedIn: number;
   checkInPercentage: number;
+}
+export interface EventAttendee {
+  ticketId: string;
+  purchaserName: string;
+  purchaserEmail: string;
+  ticketTypeName: string;
+  pricePaid: number;
+  purchasedAt: string;
+  status: TicketStatus;
+  checkedIn: boolean;
+  checkedInAt: string | null;
 }

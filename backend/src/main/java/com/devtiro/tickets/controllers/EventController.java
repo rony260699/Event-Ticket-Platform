@@ -9,6 +9,7 @@ import com.devtiro.tickets.domain.dtos.CreateEventResponseDto;
 import com.devtiro.tickets.domain.dtos.GetEventDetailsResponseDto;
 import com.devtiro.tickets.domain.dtos.ListEventResponseDto;
 import com.devtiro.tickets.domain.dtos.EventStatsResponseDto;
+import com.devtiro.tickets.domain.dtos.EventAttendeeDto;
 import com.devtiro.tickets.domain.dtos.UpdateEventRequestDto;
 import com.devtiro.tickets.domain.dtos.UpdateEventResponseDto;
 import com.devtiro.tickets.domain.entities.Event;
@@ -104,5 +105,14 @@ public class EventController {
       @PathVariable UUID eventId) {
     UUID userId = parseUserId(jwt);
     return ResponseEntity.ok(eventService.getEventStats(userId, eventId));
+  }
+
+  @GetMapping(path = "/{eventId}/attendees")
+  public ResponseEntity<Page<EventAttendeeDto>> getEventAttendees(
+      @AuthenticationPrincipal Jwt jwt,
+      @PathVariable UUID eventId,
+      Pageable pageable) {
+    UUID userId = parseUserId(jwt);
+    return ResponseEntity.ok(eventService.getEventAttendees(userId, eventId, pageable));
   }
 }

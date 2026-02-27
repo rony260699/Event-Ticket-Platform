@@ -12,6 +12,8 @@ import {
   TicketValidationRequest,
   TicketValidationResponse,
   UpdateEventRequest,
+  EventAttendee,
+  Page,
 } from "@/domain/domain";
 
 export const createEvent = async (
@@ -375,6 +377,26 @@ export const getEventStats = async (
 
   if (!response.ok) {
     throw new Error("Failed to fetch event stats");
+  }
+
+  return await response.json();
+};
+export const getEventAttendees = async (
+  token: string,
+  eventId: string,
+  page: number = 0,
+  size: number = 10
+): Promise<Page<EventAttendee>> => {
+  const response = await fetch(`/api/v1/events/${eventId}/attendees?page=${page}&size=${size}`, {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error("Failed to fetch event attendees");
   }
 
   return await response.json();
