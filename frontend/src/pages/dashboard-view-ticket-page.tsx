@@ -105,9 +105,9 @@ const DashboardViewTicketPage: React.FC = () => {
 
             <div className="flex justify-center mb-8">
               <div className="bg-white p-4 rounded-2xl shadow-lg">
-                <div className="w-32 h-32 flex items-center justify-center">
+                <div className="w-48 h-48 flex items-center justify-center">
                   {/* Loading */}
-                  {isQrLoading && (
+                  {isQrLoading && ticket.status === TicketStatus.PURCHASED && (
                     <div className="text-xs text-center p2">
                       <div className="animate-spin rounded-full h-8 w-8 border-b-2 mb-2 mx-auto"></div>
                       <div className="text-gray-800">Loading QR...</div>
@@ -121,12 +121,25 @@ const DashboardViewTicketPage: React.FC = () => {
                     </div>
                   )}
                   {/* Display QR */}
-                  {qrCodeUrl && !isQrLoading && !error && (
+                  {qrCodeUrl && !isQrLoading && !error && ticket.status === TicketStatus.PURCHASED && (
                     <img
                       src={qrCodeUrl}
                       alt="QR Code for event"
                       className="w-full h-full object-contain rounded-large"
                     />
+                  )}
+                  {/* Cancelled/Refund Status */}
+                  {ticket.status !== TicketStatus.PURCHASED && (
+                    <div className="text-center p-4">
+                      <div className="text-4xl mb-4">
+                        {ticket.status === TicketStatus.CANCELLED ? "🚫" :
+                          ticket.status === TicketStatus.REFUND_PENDING ? "⏳" : "💸"}
+                      </div>
+                      <p className="text-gray-800 font-bold text-lg">
+                        {ticket.status === TicketStatus.CANCELLED ? "Ticket Cancelled" :
+                          ticket.status === TicketStatus.REFUND_PENDING ? "Refund in Process" : "Refunded"}
+                      </p>
+                    </div>
                   )}
                 </div>
               </div>
@@ -134,7 +147,9 @@ const DashboardViewTicketPage: React.FC = () => {
 
             <div className="text-center mb-8">
               <p className="text-purple-200 text-sm">
-                Present this QR code at the venue for entry
+                {ticket.status === TicketStatus.PURCHASED ?
+                  "Present this QR code at the venue for entry" :
+                  "This ticket is no longer valid for entry"}
               </p>
             </div>
 

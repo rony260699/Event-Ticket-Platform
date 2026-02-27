@@ -34,6 +34,7 @@ export interface CreateEventRequest {
   salesStart?: Date;
   salesEnd?: Date;
   status: EventStatusEnum;
+  category: string;
   ticketTypes: CreateTicketTypeRequest[];
 }
 
@@ -54,6 +55,7 @@ export interface UpdateEventRequest {
   salesStart?: Date;
   salesEnd?: Date;
   status: EventStatusEnum;
+  category: string;
   ticketTypes: UpdateTicketTypeRequest[];
 }
 
@@ -83,6 +85,7 @@ export interface PublishedEventSummary {
   start?: Date;
   end?: Date;
   venue: string;
+  category: string;
 }
 
 export interface TicketTypeDetails {
@@ -102,6 +105,7 @@ export interface EventDetails {
   salesStart?: Date;
   salesEnd?: Date;
   status: EventStatusEnum;
+  category: string;
   ticketTypes: TicketTypeDetails[];
   createdAt: Date;
   updatedAt: Date;
@@ -141,6 +145,7 @@ export interface PublishedEventTicketTypeDetails {
   name: string;
   price: number;
   description: string;
+  availableTickets?: number;
 }
 
 export interface PublishedEventDetails {
@@ -149,17 +154,21 @@ export interface PublishedEventDetails {
   start?: Date;
   end?: Date;
   venue: string;
+  category: string;
   ticketTypes: PublishedEventTicketTypeDetails[];
 }
 
 export enum TicketStatus {
   PURCHASED = "PURCHASED",
   CANCELLED = "CANCELLED",
+  REFUND_PENDING = "REFUND_PENDING",
+  REFUNDED = "REFUNDED",
 }
 
 export interface TicketSummaryTicketType {
   id: string;
   name: string;
+  eventName: string;
   price: number;
 }
 
@@ -199,4 +208,10 @@ export interface TicketValidationRequest {
 export interface TicketValidationResponse {
   ticketId: string;
   status: TicketValidationStatus;
+}
+
+export interface EventStats {
+  totalTicketsSold: number;
+  totalRevenue: number;
+  checkInPercentage: number;
 }

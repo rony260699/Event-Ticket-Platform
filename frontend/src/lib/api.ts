@@ -1,6 +1,7 @@
 import {
   CreateEventRequest,
   EventDetails,
+  EventStats,
   EventSummary,
   isErrorResponse,
   PublishedEventDetails,
@@ -165,10 +166,15 @@ export const listPublishedEvents = async (
 
 export const searchPublishedEvents = async (
   query: string,
+  category: string,
   page: number,
 ): Promise<SpringBootPagination<PublishedEventSummary>> => {
+  const qParam = query ? `q=${query}` : "";
+  const catParam = category ? `category=${category}` : "";
+  const sep = qParam && catParam ? "&" : "";
+
   const response = await fetch(
-    `/api/v1/published-events?q=${query}&page=${page}&size=4`,
+    `/api/v1/published-events?${qParam}${sep}${catParam}&page=${page}&size=4`,
     {
       method: "GET",
       headers: {
@@ -216,7 +222,7 @@ export const getPublishedEvent = async (
 };
 
 export const purchaseTicket = async (
-  accessToken: string,
+  token: string,
   eventId: string,
   ticketTypeId: string,
 ): Promise<void> => {
@@ -225,7 +231,7 @@ export const purchaseTicket = async (
     {
       method: "POST",
       headers: {
-        Authorization: `Bearer ${accessToken}`,
+        Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
       },
     },
@@ -337,4 +343,39 @@ export const validateTicket = async (
   }
 
   return responseBody as Promise<TicketValidationResponse>;
+};
+
+export const cancelTicket = async (
+  token: string,
+  ticketId: string,
+): Promise<void> => {
+  const response = await fetch(`/api/v1/tickets/${ticketId}/cancel`, {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error("Failed to cancel ticket");
+  }
+};
+
+export const getEventStats = async (
+  token: string,
+  eventId: string,
+): Promise<EventStats> => {
+  const response = await fetch(`/api/v1/events/${eventId}/stats`, {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error("Failed to fetch event stats");
+  }
+
+  return await response.json();
 };

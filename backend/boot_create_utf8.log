@@ -1,0 +1,240 @@
+﻿[INFO] Scanning for projects...
+[INFO] 
+[INFO] ------------------------< com.devtiro:tickets >-------------------------
+[INFO] Building tickets 0.0.1-SNAPSHOT
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] >>> spring-boot:3.4.4:run (default-cli) > test-compile @ tickets >>>
+[INFO] 
+[INFO] --- resources:3.3.1:resources (default-resources) @ tickets ---
+[INFO] Copying 1 resource from src\main\resources to target\classes
+[INFO] Copying 1 resource from src\main\resources to target\classes
+[INFO] 
+[INFO] --- compiler:3.13.0:compile (default-compile) @ tickets ---
+[INFO] Nothing to compile - all classes are up to date.
+[INFO] 
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ tickets ---
+[INFO] skip non existing resourceDirectory D:\University\devtiro-event-ticket-app\backend\src\test\resources
+[INFO] 
+[INFO] --- compiler:3.13.0:testCompile (default-testCompile) @ tickets ---
+[INFO] Nothing to compile - all classes are up to date.
+[INFO] 
+[INFO] <<< spring-boot:3.4.4:run (default-cli) < test-compile @ tickets <<<
+[INFO] 
+[INFO] 
+[INFO] --- spring-boot:3.4.4:run (default-cli) @ tickets ---
+[INFO] Attaching agents: []
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v3.4.4)
+
+2026-02-22T03:07:41.281+06:00  INFO 21216 --- [tickets] [           main] com.devtiro.tickets.TicketsApplication   : Starting TicketsApplication using Java 17.0.12 with PID 21216 (D:\University\devtiro-event-ticket-app\backend\target\classes started by JESS LAPTOP GALLERY in D:\University\devtiro-event-ticket-app\backend)
+2026-02-22T03:07:41.285+06:00  INFO 21216 --- [tickets] [           main] com.devtiro.tickets.TicketsApplication   : No active profile set, falling back to 1 default profile: "default"
+2026-02-22T03:07:42.592+06:00  INFO 21216 --- [tickets] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-02-22T03:07:42.757+06:00  INFO 21216 --- [tickets] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 153 ms. Found 6 JPA repository interfaces.
+2026-02-22T03:07:43.827+06:00  INFO 21216 --- [tickets] [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8080 (http)
+2026-02-22T03:07:43.846+06:00  INFO 21216 --- [tickets] [           main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-02-22T03:07:43.847+06:00  INFO 21216 --- [tickets] [           main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.39]
+2026-02-22T03:07:43.923+06:00  INFO 21216 --- [tickets] [           main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2026-02-22T03:07:43.925+06:00  INFO 21216 --- [tickets] [           main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 2573 ms
+2026-02-22T03:07:44.096+06:00  INFO 21216 --- [tickets] [           main] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2026-02-22T03:07:44.184+06:00  INFO 21216 --- [tickets] [           main] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.6.11.Final
+2026-02-22T03:07:44.261+06:00  INFO 21216 --- [tickets] [           main] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
+2026-02-22T03:07:45.231+06:00  INFO 21216 --- [tickets] [           main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-02-22T03:07:45.277+06:00  INFO 21216 --- [tickets] [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2026-02-22T03:07:45.528+06:00  INFO 21216 --- [tickets] [           main] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@2b80497f
+2026-02-22T03:07:45.530+06:00  INFO 21216 --- [tickets] [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2026-02-22T03:07:45.572+06:00  WARN 21216 --- [tickets] [           main] org.hibernate.orm.deprecation            : HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2026-02-22T03:07:45.599+06:00  INFO 21216 --- [tickets] [           main] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
+	Database driver: undefined/unknown
+	Database version: 17.7
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-02-22T03:07:47.405+06:00  INFO 21216 --- [tickets] [           main] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+Hibernate: 
+    set client_min_messages = WARNING
+Hibernate: 
+    alter table if exists events 
+       drop constraint if exists FKdocju8m76a3f8o6ljh2jrn2ra
+Hibernate: 
+    alter table if exists qr_codes 
+       drop constraint if exists FKpmvif2aewlkns67w2xp003tgv
+Hibernate: 
+    alter table if exists ticket_types 
+       drop constraint if exists FKl83j9knh8jrssp3skaeubrrk
+Hibernate: 
+    alter table if exists ticket_validations 
+       drop constraint if exists FKh5kmfm65o91aqvi7cye1nisf4
+Hibernate: 
+    alter table if exists tickets 
+       drop constraint if exists FKifauiw719hj2vn76rlut17egc
+Hibernate: 
+    alter table if exists tickets 
+       drop constraint if exists FKotik7mbbb14hu8n9og7o92k5h
+Hibernate: 
+    alter table if exists user_attending_events 
+       drop constraint if exists FKiqcjgjbhlrccm1mgibtsnd12q
+Hibernate: 
+    alter table if exists user_attending_events 
+       drop constraint if exists FK289lo7ujwu8i2ibebd8f51uwi
+Hibernate: 
+    alter table if exists user_staffing_events 
+       drop constraint if exists FKp2o8kl5ei7jq1akun3kqb89du
+Hibernate: 
+    alter table if exists user_staffing_events 
+       drop constraint if exists FKdml3ueqafpnhbnqu9a8t2svt8
+Hibernate: 
+    drop table if exists events cascade
+Hibernate: 
+    drop table if exists qr_codes cascade
+Hibernate: 
+    drop table if exists ticket_types cascade
+Hibernate: 
+    drop table if exists ticket_validations cascade
+Hibernate: 
+    drop table if exists tickets cascade
+Hibernate: 
+    drop table if exists user_attending_events cascade
+Hibernate: 
+    drop table if exists user_staffing_events cascade
+Hibernate: 
+    drop table if exists users cascade
+Hibernate: 
+    create table events (
+        created_at timestamp(6) not null,
+        event_end timestamp(6),
+        event_start timestamp(6),
+        sales_end timestamp(6),
+        sales_start timestamp(6),
+        updated_at timestamp(6) not null,
+        id uuid not null,
+        organizer_id uuid,
+        name varchar(255) not null,
+        status varchar(255) not null check (status in ('DRAFT','PUBLISHED','CANCELLED','COMPLETED')),
+        venue varchar(255) not null,
+        primary key (id)
+    )
+Hibernate: 
+    create table qr_codes (
+        created_at timestamp(6) not null,
+        updated_at timestamp(6) not null,
+        id uuid not null,
+        ticket_id uuid,
+        status varchar(255) not null check (status in ('ACTIVE','EXPIRED')),
+        value TEXT not null,
+        primary key (id)
+    )
+Hibernate: 
+    create table ticket_types (
+        price float(53) not null,
+        total_available integer,
+        created_at timestamp(6) not null,
+        updated_at timestamp(6) not null,
+        event_id uuid,
+        id uuid not null,
+        description varchar(255),
+        name varchar(255) not null,
+        primary key (id)
+    )
+Hibernate: 
+    create table ticket_validations (
+        created_at timestamp(6) not null,
+        updated_at timestamp(6) not null,
+        id uuid not null,
+        ticket_id uuid,
+        status varchar(255) not null check (status in ('VALID','INVALID','EXPIRED')),
+        validation_method varchar(255) not null check (validation_method in ('QR_SCAN','MANUAL')),
+        primary key (id)
+    )
+Hibernate: 
+    create table tickets (
+        created_at timestamp(6) not null,
+        updated_at timestamp(6) not null,
+        id uuid not null,
+        purchaser_id uuid,
+        ticket_type_id uuid,
+        status varchar(255) not null check (status in ('PURCHASED','CANCELLED')),
+        primary key (id)
+    )
+Hibernate: 
+    create table user_attending_events (
+        event_id uuid not null,
+        user_id uuid not null
+    )
+Hibernate: 
+    create table user_staffing_events (
+        event_id uuid not null,
+        user_id uuid not null
+    )
+Hibernate: 
+    create table users (
+        created_at timestamp(6) not null,
+        updated_at timestamp(6) not null,
+        id uuid not null,
+        email varchar(255) not null,
+        name varchar(255) not null,
+        primary key (id)
+    )
+Hibernate: 
+    alter table if exists events 
+       add constraint FKdocju8m76a3f8o6ljh2jrn2ra 
+       foreign key (organizer_id) 
+       references users
+Hibernate: 
+    alter table if exists qr_codes 
+       add constraint FKpmvif2aewlkns67w2xp003tgv 
+       foreign key (ticket_id) 
+       references tickets
+Hibernate: 
+    alter table if exists ticket_types 
+       add constraint FKl83j9knh8jrssp3skaeubrrk 
+       foreign key (event_id) 
+       references events
+Hibernate: 
+    alter table if exists ticket_validations 
+       add constraint FKh5kmfm65o91aqvi7cye1nisf4 
+       foreign key (ticket_id) 
+       references tickets
+Hibernate: 
+    alter table if exists tickets 
+       add constraint FKifauiw719hj2vn76rlut17egc 
+       foreign key (purchaser_id) 
+       references users
+Hibernate: 
+    alter table if exists tickets 
+       add constraint FKotik7mbbb14hu8n9og7o92k5h 
+       foreign key (ticket_type_id) 
+       references ticket_types
+Hibernate: 
+    alter table if exists user_attending_events 
+       add constraint FKiqcjgjbhlrccm1mgibtsnd12q 
+       foreign key (event_id) 
+       references events
+Hibernate: 
+    alter table if exists user_attending_events 
+       add constraint FK289lo7ujwu8i2ibebd8f51uwi 
+       foreign key (user_id) 
+       references users
+Hibernate: 
+    alter table if exists user_staffing_events 
+       add constraint FKp2o8kl5ei7jq1akun3kqb89du 
+       foreign key (event_id) 
+       references events
+Hibernate: 
+    alter table if exists user_staffing_events 
+       add constraint FKdml3ueqafpnhbnqu9a8t2svt8 
+       foreign key (user_id) 
+       references users
+2026-02-22T03:07:47.746+06:00  INFO 21216 --- [tickets] [           main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-02-22T03:07:48.384+06:00  INFO 21216 --- [tickets] [           main] o.s.d.j.r.query.QueryEnhancerFactory     : Hibernate is in classpath; If applicable, HQL parser will be used.
+2026-02-22T03:07:49.622+06:00  WARN 21216 --- [tickets] [           main] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning

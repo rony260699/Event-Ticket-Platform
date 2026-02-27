@@ -1,0 +1,100 @@
+﻿        event_id uuid,
+        id uuid not null,
+        description varchar(255),
+        name varchar(255) not null,
+        primary key (id)
+    )
+Hibernate: 
+    create table ticket_validations (
+        created_at timestamp(6) not null,
+        updated_at timestamp(6) not null,
+        id uuid not null,
+        ticket_id uuid,
+        status varchar(255) not null check (status in ('VALID','INVALID','EXPIRED')),
+        validation_method varchar(255) not null check (validation_method in ('QR_SCAN','MANUAL')),
+        primary key (id)
+    )
+Hibernate: 
+    create table tickets (
+        created_at timestamp(6) not null,
+        updated_at timestamp(6) not null,
+        id uuid not null,
+        purchaser_id uuid,
+        ticket_type_id uuid,
+        status varchar(255) not null check (status in ('PURCHASED','CANCELLED')),
+        primary key (id)
+    )
+Hibernate: 
+    create table user_attending_events (
+        event_id uuid not null,
+        user_id uuid not null
+    )
+Hibernate: 
+    create table user_staffing_events (
+        event_id uuid not null,
+        user_id uuid not null
+    )
+Hibernate: 
+    create table users (
+        created_at timestamp(6) not null,
+        updated_at timestamp(6) not null,
+        id uuid not null,
+        email varchar(255) not null,
+        name varchar(255) not null,
+        primary key (id)
+    )
+Hibernate: 
+    alter table if exists events 
+       add constraint FKdocju8m76a3f8o6ljh2jrn2ra 
+       foreign key (organizer_id) 
+       references users
+Hibernate: 
+    alter table if exists qr_codes 
+       add constraint FKpmvif2aewlkns67w2xp003tgv 
+       foreign key (ticket_id) 
+       references tickets
+Hibernate: 
+    alter table if exists ticket_types 
+       add constraint FKl83j9knh8jrssp3skaeubrrk 
+       foreign key (event_id) 
+       references events
+Hibernate: 
+    alter table if exists ticket_validations 
+       add constraint FKh5kmfm65o91aqvi7cye1nisf4 
+       foreign key (ticket_id) 
+       references tickets
+Hibernate: 
+    alter table if exists tickets 
+       add constraint FKifauiw719hj2vn76rlut17egc 
+       foreign key (purchaser_id) 
+       references users
+Hibernate: 
+    alter table if exists tickets 
+       add constraint FKotik7mbbb14hu8n9og7o92k5h 
+       foreign key (ticket_type_id) 
+       references ticket_types
+Hibernate: 
+    alter table if exists user_attending_events 
+       add constraint FKiqcjgjbhlrccm1mgibtsnd12q 
+       foreign key (event_id) 
+       references events
+Hibernate: 
+    alter table if exists user_attending_events 
+       add constraint FK289lo7ujwu8i2ibebd8f51uwi 
+       foreign key (user_id) 
+       references users
+Hibernate: 
+    alter table if exists user_staffing_events 
+       add constraint FKp2o8kl5ei7jq1akun3kqb89du 
+       foreign key (event_id) 
+       references events
+Hibernate: 
+    alter table if exists user_staffing_events 
+       add constraint FKdml3ueqafpnhbnqu9a8t2svt8 
+       foreign key (user_id) 
+       references users
+2026-02-22T03:07:47.746+06:00  INFO 21216 --- [tickets] [           main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-02-22T03:07:48.384+06:00  INFO 21216 --- [tickets] [           main] o.s.d.j.r.query.QueryEnhancerFactory     : Hibernate is in classpath; If applicable, HQL parser will be used.
+2026-02-22T03:07:49.622+06:00  WARN 21216 --- [tickets] [           main] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2026-02-22T03:07:51.414+06:00  INFO 21216 --- [tickets] [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8080 (http) with context path '/'
+2026-02-22T03:07:51.427+06:00  INFO 21216 --- [tickets] [           main] com.devtiro.tickets.TicketsApplication   : Started TicketsApplication in 10.708 seconds (process running for 11.219)

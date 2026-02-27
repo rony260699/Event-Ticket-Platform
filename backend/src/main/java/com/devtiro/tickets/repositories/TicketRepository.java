@@ -13,6 +13,13 @@ public interface TicketRepository extends JpaRepository<Ticket, UUID> {
 
   int countByTicketTypeId(UUID ticketTypeId);
 
+  long countByTicketTypeEventId(UUID eventId);
+
+  @org.springframework.data.jpa.repository.Query("SELECT SUM(t.pricePaid) FROM Ticket t WHERE t.ticketType.event.id = :eventId")
+  Double sumPricePaidByEventId(UUID eventId);
+
+  long countByTicketTypeEventIdAndStatus(UUID eventId, com.devtiro.tickets.domain.entities.TicketStatusEnum status);
+
   Page<Ticket> findByPurchaserId(UUID purchaserId, Pageable pageable);
 
   Optional<Ticket> findByIdAndPurchaserId(UUID id, UUID purchaserId);

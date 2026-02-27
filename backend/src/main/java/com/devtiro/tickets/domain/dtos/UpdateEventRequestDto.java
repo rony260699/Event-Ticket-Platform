@@ -47,6 +47,9 @@ public class UpdateEventRequestDto {
   @NotNull(message = "Event status must be provided")
   private EventStatusEnum status;
 
+  @NotBlank(message = "Category is required")
+  private String category;
+
   @NotEmpty(message = "At least one ticket type is required")
   @Valid
   private List<UpdateTicketTypeRequestDto> ticketTypes;

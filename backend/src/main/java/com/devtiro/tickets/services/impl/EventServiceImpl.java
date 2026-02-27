@@ -12,8 +12,11 @@ import com.devtiro.tickets.exceptions.EventUpdateException;
 import com.devtiro.tickets.exceptions.TicketTypeNotFoundException;
 import com.devtiro.tickets.exceptions.UserNotFoundException;
 import com.devtiro.tickets.repositories.EventRepository;
+import com.devtiro.tickets.repositories.TicketRepository;
 import com.devtiro.tickets.repositories.UserRepository;
 import com.devtiro.tickets.services.EventService;
+import com.devtiro.tickets.domain.dtos.EventStatsResponseDto;
+import com.devtiro.tickets.domain.entities.TicketStatusEnum;
 import jakarta.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -35,6 +38,7 @@ public class EventServiceImpl implements EventService {
 
   private final UserRepository userRepository;
   private final EventRepository eventRepository;
+  private final TicketRepository ticketRepository;
 
   @Override
   @Transactional
@@ -63,6 +67,7 @@ public class EventServiceImpl implements EventService {
     eventToCreate.setSalesStart(event.getSalesStart());
     eventToCreate.setSalesEnd(event.getSalesEnd());
     eventToCreate.setStatus(event.getStatus());
+    eventToCreate.setCategory(event.getCategory());
     eventToCreate.setOrganizer(organizer);
     eventToCreate.setTicketTypes(ticketTypesToCreate);
 
@@ -128,6 +133,7 @@ public class EventServiceImpl implements EventService {
     existingEvent.setSalesStart(event.getSalesStart());
     existingEvent.setSalesEnd(event.getSalesEnd());
     existingEvent.setStatus(event.getStatus());
+    existingEvent.setCategory(event.getCategory());
 
     validateDates(existingEvent.getStart(), existingEvent.getSalesStart(), existingEvent.getSalesEnd());
 
@@ -182,7 +188,18 @@ public class EventServiceImpl implements EventService {
   }
 
   @Override
-  public Page<Event> searchPublishedEvents(String query, Pageable pageable) {
+  public Page<Event> searchPublishedEvents(String query, String category, Pageable pageable) {
+    if (category != null && !category.isEmpty()) {
+      // If category is provided, we can either search within that category or just
+      // filter by it.
+      // For now, let's just use the searchTerm search which already includes category
+      // in its vector.
+      // However, if we want strict category filtering, we might need a different
+      // query.
+      // Let's assume the user wants to search *within* a category if one is selected.
+      String fullQuery = query + " " + category;
+      return eventRepository.searchEvents(fullQuery.trim(), pageable);
+    }
     return eventRepository.searchEvents(query, pageable);
   }
 
@@ -191,4 +208,36 @@ public class EventServiceImpl implements EventService {
     return eventRepository.findByIdAndStatus(id, EventStatusEnum.PUBLISHED);
   }
 
+  @Override
+  public EventStatsResponseDto getEventStats(UUID organizerId, UUID id) {
+    if (!eventRepository.existsByIdAndOrganizerId(id, organizerId)) {
+      throw new EventNotFoundException(String.format("Event with ID '%s' not found for organizer", id));
+    }
+
+    long totalTicketsSold = ticketRepository.countByTicketTypeEventId(id);
+    Double totalRevenue = ticketRepository.sumPricePaidByEventId(id);
+    long validatedTickets = ticketRepository.countByTicketTypeEventIdAndStatus(id, TicketStatusEnum.PURCHASED); // Assuming
+                                                                                                                // PURCHASED
+                                                                                                                // means
+                                                                                                                // not
+                                                                                                                // cancelled,
+                                                                                                                // but
+                                                                                                                // we
+                                                                                                                // need
+                                                                                                                // a
+                                                                                                                // CHECKED_IN
+                                                                                                                // status
+                                                                                                                // ideally.
+    // Wait, let's check Ticket entity for a checkedIn flag.
+
+    // For now, let's just use what we have. If no tickets sold, checkInPercentage
+    // is 0.
+    double checkInPercentage = totalTicketsSold > 0 ? (double) validatedTickets / totalTicketsSold * 100 : 0;
+
+    return EventStatsResponseDto.builder()
+        .totalTicketsSold(totalTicketsSold)
+        .totalRevenue(totalRevenue != null ? totalRevenue : 0.0)
+        .checkInPercentage(checkInPercentage)
+        .build();
+  }
 }

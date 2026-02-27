@@ -5,6 +5,7 @@ import com.devtiro.tickets.exceptions.EventNotFoundException;
 import com.devtiro.tickets.exceptions.EventUpdateException;
 import com.devtiro.tickets.exceptions.QrCodeGenerationException;
 import com.devtiro.tickets.exceptions.QrCodeNotFoundException;
+import com.devtiro.tickets.exceptions.TicketCancellationExpiredException;
 import com.devtiro.tickets.exceptions.TicketNotFoundException;
 import com.devtiro.tickets.exceptions.TicketTypeNotFoundException;
 import com.devtiro.tickets.exceptions.TicketsSoldOutException;
