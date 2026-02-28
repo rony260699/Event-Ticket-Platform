@@ -19,21 +19,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
 @Entity
 @Table(name = "events")
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
 public class Event {
 
   @Id
@@ -80,29 +70,148 @@ public class Event {
   private List<TicketType> ticketTypes = new ArrayList<>();
 
   @CreatedDate
-  @Column(name = "created_at", updatable = false, nullable = false)
+  @Column(name = "created_at", nullable = false, updatable = false)
   private LocalDateTime createdAt;
 
   @LastModifiedDate
   @Column(name = "updated_at", nullable = false)
   private LocalDateTime updatedAt;
 
+  public Event() {
+  }
+
+  public UUID getId() {
+    return id;
+  }
+
+  public void setId(UUID id) {
+    this.id = id;
+  }
+
+  public String getName() {
+    return name;
+  }
+
+  public void setName(String name) {
+    this.name = name;
+  }
+
+  public LocalDateTime getStart() {
+    return start;
+  }
+
+  public void setStart(LocalDateTime start) {
+    this.start = start;
+  }
+
+  public LocalDateTime getEnd() {
+    return end;
+  }
+
+  public void setEnd(LocalDateTime end) {
+    this.end = end;
+  }
+
+  public String getVenue() {
+    return venue;
+  }
+
+  public void setVenue(String venue) {
+    this.venue = venue;
+  }
+
+  public LocalDateTime getSalesStart() {
+    return salesStart;
+  }
+
+  public void setSalesStart(LocalDateTime salesStart) {
+    this.salesStart = salesStart;
+  }
+
+  public LocalDateTime getSalesEnd() {
+    return salesEnd;
+  }
+
+  public void setSalesEnd(LocalDateTime salesEnd) {
+    this.salesEnd = salesEnd;
+  }
+
+  public EventStatusEnum getStatus() {
+    return status;
+  }
+
+  public void setStatus(EventStatusEnum status) {
+    this.status = status;
+  }
+
+  public String getCategory() {
+    return category;
+  }
+
+  public void setCategory(String category) {
+    this.category = category;
+  }
+
+  public User getOrganizer() {
+    return organizer;
+  }
+
+  public void setOrganizer(User organizer) {
+    this.organizer = organizer;
+  }
+
+  public List<User> getAttendees() {
+    return attendees;
+  }
+
+  public void setAttendees(List<User> attendees) {
+    this.attendees = attendees;
+  }
+
+  public List<User> getStaff() {
+    return staff;
+  }
+
+  public void setStaff(List<User> staff) {
+    this.staff = staff;
+  }
+
+  public List<TicketType> getTicketTypes() {
+    return ticketTypes;
+  }
+
+  public void setTicketTypes(List<TicketType> ticketTypes) {
+    this.ticketTypes = ticketTypes;
+  }
+
+  public LocalDateTime getCreatedAt() {
+    return createdAt;
+  }
+
+  public void setCreatedAt(LocalDateTime createdAt) {
+    this.createdAt = createdAt;
+  }
+
+  public LocalDateTime getUpdatedAt() {
+    return updatedAt;
+  }
+
+  public void setUpdatedAt(LocalDateTime updatedAt) {
+    this.updatedAt = updatedAt;
+  }
+
   @Override
   public boolean equals(Object o) {
-    if (o == null || getClass() != o.getClass()) {
+    if (this == o)
+      return true;
+    if (o == null || getClass() != o.getClass())
       return false;
-    }
     Event event = (Event) o;
-    return Objects.equals(id, event.id) && Objects.equals(name, event.name) && Objects.equals(start,
-        event.start) && Objects.equals(end, event.end) && Objects.equals(venue, event.venue)
-        && Objects.equals(salesStart, event.salesStart) && Objects.equals(salesEnd, event.salesEnd)
-        && status == event.status && Objects.equals(createdAt, event.createdAt) && Objects.equals(
-            updatedAt, event.updatedAt);
+    return Objects.equals(id, event.id);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, name, start, end, venue, salesStart, salesEnd, status, createdAt,
-        updatedAt);
+    return Objects.hash(id);
   }
 }

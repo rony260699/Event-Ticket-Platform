@@ -14,19 +14,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
 @Entity
 @Table(name = "users")
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
 public class User {
 
   @Id
@@ -43,42 +35,112 @@ public class User {
   private List<Event> organizedEvents = new ArrayList<>();
 
   @ManyToMany
-  @JoinTable(
-      name = "user_attending_events",
-      joinColumns = @JoinColumn(name = "user_id"),
-      inverseJoinColumns = @JoinColumn(name = "event_id")
-  )
+  @JoinTable(name = "user_attending_events", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "event_id"))
   private List<Event> attendingEvents = new ArrayList<>();
 
   @ManyToMany
-  @JoinTable(
-      name = "user_staffing_events",
-      joinColumns = @JoinColumn(name = "user_id"),
-      inverseJoinColumns = @JoinColumn(name = "event_id")
-  )
+  @JoinTable(name = "user_staffing_events", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "event_id"))
   private List<Event> staffingEvents = new ArrayList<>();
 
   @CreatedDate
-  @Column(name = "created_at", updatable = false, nullable = false)
+  @Column(name = "created_at", nullable = false, updatable = false)
   private LocalDateTime createdAt;
 
   @LastModifiedDate
   @Column(name = "updated_at", nullable = false)
   private LocalDateTime updatedAt;
 
+  public User() {
+  }
+
+  public User(UUID id, String name, String email, List<Event> organizedEvents, List<Event> attendingEvents,
+      List<Event> staffingEvents, LocalDateTime createdAt, LocalDateTime updatedAt) {
+    this.id = id;
+    this.name = name;
+    this.email = email;
+    this.organizedEvents = organizedEvents;
+    this.attendingEvents = attendingEvents;
+    this.staffingEvents = staffingEvents;
+    this.createdAt = createdAt;
+    this.updatedAt = updatedAt;
+  }
+
+  public UUID getId() {
+    return id;
+  }
+
+  public void setId(UUID id) {
+    this.id = id;
+  }
+
+  public String getName() {
+    return name;
+  }
+
+  public void setName(String name) {
+    this.name = name;
+  }
+
+  public String getEmail() {
+    return email;
+  }
+
+  public void setEmail(String email) {
+    this.email = email;
+  }
+
+  public List<Event> getOrganizedEvents() {
+    return organizedEvents;
+  }
+
+  public void setOrganizedEvents(List<Event> organizedEvents) {
+    this.organizedEvents = organizedEvents;
+  }
+
+  public List<Event> getAttendingEvents() {
+    return attendingEvents;
+  }
+
+  public void setAttendingEvents(List<Event> attendingEvents) {
+    this.attendingEvents = attendingEvents;
+  }
+
+  public List<Event> getStaffingEvents() {
+    return staffingEvents;
+  }
+
+  public void setStaffingEvents(List<Event> staffingEvents) {
+    this.staffingEvents = staffingEvents;
+  }
+
+  public LocalDateTime getCreatedAt() {
+    return createdAt;
+  }
+
+  public void setCreatedAt(LocalDateTime createdAt) {
+    this.createdAt = createdAt;
+  }
+
+  public LocalDateTime getUpdatedAt() {
+    return updatedAt;
+  }
+
+  public void setUpdatedAt(LocalDateTime updatedAt) {
+    this.updatedAt = updatedAt;
+  }
+
   @Override
   public boolean equals(Object o) {
-    if (o == null || getClass() != o.getClass()) {
+    if (this == o)
+      return true;
+    if (o == null || getClass() != o.getClass())
       return false;
-    }
     User user = (User) o;
-    return Objects.equals(id, user.id) && Objects.equals(name, user.name) && Objects.equals(email,
-        user.email) && Objects.equals(createdAt, user.createdAt) && Objects.equals(updatedAt,
-        user.updatedAt);
+    return Objects.equals(id, user.id) && Objects.equals(name, user.name) && Objects.equals(email, user.email);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, name, email, createdAt, updatedAt);
+    return Objects.hash(id, name, email);
   }
 }

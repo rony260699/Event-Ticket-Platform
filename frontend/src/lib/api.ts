@@ -14,6 +14,7 @@ import {
   UpdateEventRequest,
   EventAttendee,
   Page,
+  PurchaseTicketRequest,
 } from "@/domain/domain";
 
 export const createEvent = async (
@@ -227,6 +228,7 @@ export const purchaseTicket = async (
   token: string,
   eventId: string,
   ticketTypeId: string,
+  request: PurchaseTicketRequest,
 ): Promise<void> => {
   const response = await fetch(
     `/api/v1/events/${eventId}/ticket-types/${ticketTypeId}/tickets`,
@@ -236,6 +238,7 @@ export const purchaseTicket = async (
         Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
       },
+      body: JSON.stringify(request),
     },
   );
 

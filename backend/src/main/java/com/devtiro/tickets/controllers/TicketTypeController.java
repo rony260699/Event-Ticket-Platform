@@ -2,6 +2,7 @@ package com.devtiro.tickets.controllers;
 
 import static com.devtiro.tickets.util.JwtUtil.parseUserId;
 
+import com.devtiro.tickets.domain.dtos.PurchaseTicketRequestDto;
 import com.devtiro.tickets.services.TicketTypeService;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
@@ -11,6 +12,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -24,8 +26,9 @@ public class TicketTypeController {
   @PostMapping(path = "/{ticketTypeId}/tickets")
   public ResponseEntity<Void> purchaseTicket(
       @AuthenticationPrincipal Jwt jwt,
-      @PathVariable UUID ticketTypeId) {
-    ticketTypeService.purchaseTicket(parseUserId(jwt), ticketTypeId);
+      @PathVariable UUID ticketTypeId,
+      @RequestBody PurchaseTicketRequestDto purchaseRequest) {
+    ticketTypeService.purchaseTicket(parseUserId(jwt), ticketTypeId, purchaseRequest);
     return new ResponseEntity<>(HttpStatus.NO_CONTENT);
   }
 

@@ -18,21 +18,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
 @Entity
 @Table(name = "tickets")
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
 public class Ticket {
 
   @Id
@@ -62,25 +52,147 @@ public class Ticket {
   private Double pricePaid;
 
   @CreatedDate
-  @Column(name = "created_at", updatable = false, nullable = false)
+  @Column(name = "created_at", nullable = false, updatable = false)
   private LocalDateTime createdAt;
 
   @LastModifiedDate
   @Column(name = "updated_at", nullable = false)
   private LocalDateTime updatedAt;
 
+  public Ticket() {
+  }
+
+  public UUID getId() {
+    return id;
+  }
+
+  public void setId(UUID id) {
+    this.id = id;
+  }
+
+  public TicketStatusEnum getStatus() {
+    return status;
+  }
+
+  public void setStatus(TicketStatusEnum status) {
+    this.status = status;
+  }
+
+  public TicketType getTicketType() {
+    return ticketType;
+  }
+
+  public void setTicketType(TicketType ticketType) {
+    this.ticketType = ticketType;
+  }
+
+  public User getPurchaser() {
+    return purchaser;
+  }
+
+  public void setPurchaser(User purchaser) {
+    this.purchaser = purchaser;
+  }
+
+  public List<TicketValidation> getValidations() {
+    return validations;
+  }
+
+  public void setValidations(List<TicketValidation> validations) {
+    this.validations = validations;
+  }
+
+  public List<QrCode> getQrCodes() {
+    return qrCodes;
+  }
+
+  public void setQrCodes(List<QrCode> qrCodes) {
+    this.qrCodes = qrCodes;
+  }
+
+  public Double getPricePaid() {
+    return pricePaid;
+  }
+
+  public void setPricePaid(Double pricePaid) {
+    this.pricePaid = pricePaid;
+  }
+
+  public LocalDateTime getCreatedAt() {
+    return createdAt;
+  }
+
+  public void setCreatedAt(LocalDateTime createdAt) {
+    this.createdAt = createdAt;
+  }
+
+  public LocalDateTime getUpdatedAt() {
+    return updatedAt;
+  }
+
+  public void setUpdatedAt(LocalDateTime updatedAt) {
+    this.updatedAt = updatedAt;
+  }
+
   @Override
   public boolean equals(Object o) {
-    if (o == null || getClass() != o.getClass()) {
+    if (this == o)
+      return true;
+    if (o == null || getClass() != o.getClass())
       return false;
-    }
     Ticket ticket = (Ticket) o;
-    return Objects.equals(id, ticket.id) && status == ticket.status && Objects.equals(createdAt,
-        ticket.createdAt) && Objects.equals(updatedAt, ticket.updatedAt);
+    return Objects.equals(id, ticket.id);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, status, createdAt, updatedAt);
+    return Objects.hash(id);
+  }
+
+  public static TicketBuilder builder() {
+    return new TicketBuilder();
+  }
+
+  public static class TicketBuilder {
+    private UUID id;
+    private TicketStatusEnum status;
+    private TicketType ticketType;
+    private User purchaser;
+    private Double pricePaid;
+
+    public TicketBuilder id(UUID id) {
+      this.id = id;
+      return this;
+    }
+
+    public TicketBuilder status(TicketStatusEnum status) {
+      this.status = status;
+      return this;
+    }
+
+    public TicketBuilder ticketType(TicketType ticketType) {
+      this.ticketType = ticketType;
+      return this;
+    }
+
+    public TicketBuilder purchaser(User purchaser) {
+      this.purchaser = purchaser;
+      return this;
+    }
+
+    public TicketBuilder pricePaid(Double pricePaid) {
+      this.pricePaid = pricePaid;
+      return this;
+    }
+
+    public Ticket build() {
+      Ticket ticket = new Ticket();
+      ticket.setId(id);
+      ticket.setStatus(status);
+      ticket.setTicketType(ticketType);
+      ticket.setPurchaser(purchaser);
+      ticket.setPricePaid(pricePaid);
+      return ticket;
+    }
   }
 }

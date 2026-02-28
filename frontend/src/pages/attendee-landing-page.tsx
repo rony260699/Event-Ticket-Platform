@@ -173,7 +173,7 @@ const AttendeeLandingPage: React.FC = () => {
       </div>
 
       {/* Published Event Cards */}
-      <div className="grid grid-cols-2 gap-4 px-4 md:grid-cols-4">
+      <div className="grid grid-cols-[repeat(auto-fill,minmax(240px,1fr))] gap-4 px-4">
         {publishedEvents?.content?.map((publishedEvent) => (
           <PublishedEventCard
             publishedEvent={publishedEvent}

@@ -13,7 +13,7 @@ const PublishedEventCard: React.FC<PublishedEventCardProperties> = ({
   publishedEvent,
 }) => {
   return (
-    <Link to={`/events/${publishedEvent.id}`}>
+    <Link to={`/events/${publishedEvent.id}`} className="block w-fit">
       <Card className="py-0 overflow-hidden max-w-[240px] gap-2">
         {/* Card Image */}
         <div className="h-[140px]">

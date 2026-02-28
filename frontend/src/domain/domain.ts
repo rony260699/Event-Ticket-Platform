@@ -229,3 +229,8 @@ export interface EventAttendee {
   checkedIn: boolean;
   checkedInAt: string | null;
 }
+
+export interface PurchaseTicketRequest {
+  paymentMethod: string;
+  transactionId: string;
+}

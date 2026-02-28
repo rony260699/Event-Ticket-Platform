@@ -6,6 +6,7 @@ import com.devtiro.tickets.domain.entities.TicketStatusEnum;
 import com.devtiro.tickets.exceptions.TicketCancellationExpiredException;
 import com.devtiro.tickets.exceptions.TicketNotFoundException;
 import com.devtiro.tickets.repositories.TicketRepository;
+import com.devtiro.tickets.services.EmailService;
 import com.devtiro.tickets.services.TicketService;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
@@ -21,6 +22,7 @@ import org.springframework.stereotype.Service;
 public class TicketServiceImpl implements TicketService {
 
   private final TicketRepository ticketRepository;
+  private final EmailService emailService;
 
   @Override
   public Page<Ticket> listTicketsForUser(UUID userId, Pageable pageable) {
@@ -47,6 +49,7 @@ public class TicketServiceImpl implements TicketService {
     }
 
     ticket.setStatus(TicketStatusEnum.REFUND_PENDING);
-    ticketRepository.save(ticket);
+    Ticket savedTicket = ticketRepository.save(ticket);
+    emailService.sendTicketCancellation(savedTicket);
   }
 }
