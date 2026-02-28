@@ -30,15 +30,15 @@ export const createEvent = async (
     body: JSON.stringify(request),
   });
 
-  const responseBody = await response.json();
-
   if (!response.ok) {
-    if (isErrorResponse(responseBody)) {
-      throw new Error(responseBody.error);
-    } else {
-      console.error(JSON.stringify(responseBody));
-      throw new Error("An unknown error occurred");
+    const contentType = response.headers.get("content-type");
+    if (contentType && contentType.includes("application/json")) {
+      const responseBody = await response.json();
+      if (isErrorResponse(responseBody)) {
+        throw new Error(responseBody.error);
+      }
     }
+    throw new Error(`Failed to create event: ${response.statusText}`);
   }
 };
 
@@ -56,15 +56,15 @@ export const updateEvent = async (
     body: JSON.stringify(request),
   });
 
-  const responseBody = await response.json();
-
   if (!response.ok) {
-    if (isErrorResponse(responseBody)) {
-      throw new Error(responseBody.error);
-    } else {
-      console.error(JSON.stringify(responseBody));
-      throw new Error("An unknown error occurred");
+    const contentType = response.headers.get("content-type");
+    if (contentType && contentType.includes("application/json")) {
+      const responseBody = await response.json();
+      if (isErrorResponse(responseBody)) {
+        throw new Error(responseBody.error);
+      }
     }
+    throw new Error(`Failed to update event: ${response.statusText}`);
   }
 };
 
@@ -80,18 +80,21 @@ export const listEvents = async (
     },
   });
 
-  const responseBody = await response.json();
-
   if (!response.ok) {
-    if (isErrorResponse(responseBody)) {
-      throw new Error(responseBody.error);
-    } else {
-      console.error(JSON.stringify(responseBody));
-      throw new Error("An unknown error occurred");
+    if (response.status === 403) {
+      throw new Error("Access denied: You do not have permission to view your events.");
     }
+    const contentType = response.headers.get("content-type");
+    if (contentType && contentType.includes("application/json")) {
+      const responseBody = await response.json();
+      if (isErrorResponse(responseBody)) {
+        throw new Error(responseBody.error);
+      }
+    }
+    throw new Error(`Failed to list events: ${response.statusText}`);
   }
 
-  return responseBody as SpringBootPagination<EventSummary>;
+  return (await response.json()) as SpringBootPagination<EventSummary>;
 };
 
 export const getEvent = async (
@@ -106,18 +109,21 @@ export const getEvent = async (
     },
   });
 
-  const responseBody = await response.json();
-
   if (!response.ok) {
-    if (isErrorResponse(responseBody)) {
-      throw new Error(responseBody.error);
-    } else {
-      console.error(JSON.stringify(responseBody));
-      throw new Error("An unknown error occurred");
+    if (response.status === 403) {
+      throw new Error("Access denied: You do not have permission to view this event.");
     }
+    const contentType = response.headers.get("content-type");
+    if (contentType && contentType.includes("application/json")) {
+      const responseBody = await response.json();
+      if (isErrorResponse(responseBody)) {
+        throw new Error(responseBody.error);
+      }
+    }
+    throw new Error(`Failed to get event: ${response.statusText}`);
   }
 
-  return responseBody as EventDetails;
+  return (await response.json()) as EventDetails;
 };
 
 export const deleteEvent = async (
@@ -133,13 +139,14 @@ export const deleteEvent = async (
   });
 
   if (!response.ok) {
-    const responseBody = await response.json();
-    if (isErrorResponse(responseBody)) {
-      throw new Error(responseBody.error);
-    } else {
-      console.error(JSON.stringify(responseBody));
-      throw new Error("An unknown error occurred");
+    const contentType = response.headers.get("content-type");
+    if (contentType && contentType.includes("application/json")) {
+      const responseBody = await response.json();
+      if (isErrorResponse(responseBody)) {
+        throw new Error(responseBody.error);
+      }
     }
+    throw new Error(`Failed to delete event: ${response.statusText}`);
   }
 };
 
@@ -153,18 +160,18 @@ export const listPublishedEvents = async (
     },
   });
 
-  const responseBody = await response.json();
-
   if (!response.ok) {
-    if (isErrorResponse(responseBody)) {
-      throw new Error(responseBody.error);
-    } else {
-      console.error(JSON.stringify(responseBody));
-      throw new Error("An unknown error occurred");
+    const contentType = response.headers.get("content-type");
+    if (contentType && contentType.includes("application/json")) {
+      const responseBody = await response.json();
+      if (isErrorResponse(responseBody)) {
+        throw new Error(responseBody.error);
+      }
     }
+    throw new Error(`Failed to list published events: ${response.statusText}`);
   }
 
-  return responseBody as SpringBootPagination<PublishedEventSummary>;
+  return (await response.json()) as SpringBootPagination<PublishedEventSummary>;
 };
 
 export const searchPublishedEvents = async (
@@ -186,18 +193,18 @@ export const searchPublishedEvents = async (
     },
   );
 
-  const responseBody = await response.json();
-
   if (!response.ok) {
-    if (isErrorResponse(responseBody)) {
-      throw new Error(responseBody.error);
-    } else {
-      console.error(JSON.stringify(responseBody));
-      throw new Error("An unknown error occurred");
+    const contentType = response.headers.get("content-type");
+    if (contentType && contentType.includes("application/json")) {
+      const responseBody = await response.json();
+      if (isErrorResponse(responseBody)) {
+        throw new Error(responseBody.error);
+      }
     }
+    throw new Error(`Failed to search events: ${response.statusText}`);
   }
 
-  return responseBody as SpringBootPagination<PublishedEventSummary>;
+  return (await response.json()) as SpringBootPagination<PublishedEventSummary>;
 };
 
 export const getPublishedEvent = async (
@@ -210,18 +217,18 @@ export const getPublishedEvent = async (
     },
   });
 
-  const responseBody = await response.json();
-
   if (!response.ok) {
-    if (isErrorResponse(responseBody)) {
-      throw new Error(responseBody.error);
-    } else {
-      console.error(JSON.stringify(responseBody));
-      throw new Error("An unknown error occurred");
+    const contentType = response.headers.get("content-type");
+    if (contentType && contentType.includes("application/json")) {
+      const responseBody = await response.json();
+      if (isErrorResponse(responseBody)) {
+        throw new Error(responseBody.error);
+      }
     }
+    throw new Error(`Failed to get event details: ${response.statusText}`);
   }
 
-  return responseBody as PublishedEventDetails;
+  return (await response.json()) as PublishedEventDetails;
 };
 
 export const purchaseTicket = async (
@@ -243,13 +250,14 @@ export const purchaseTicket = async (
   );
 
   if (!response.ok) {
-    const responseBody = await response.json();
-    if (isErrorResponse(responseBody)) {
-      throw new Error(responseBody.error);
-    } else {
-      console.error(JSON.stringify(responseBody));
-      throw new Error("An unknown error occurred");
+    const contentType = response.headers.get("content-type");
+    if (contentType && contentType.includes("application/json")) {
+      const responseBody = await response.json();
+      if (isErrorResponse(responseBody)) {
+        throw new Error(responseBody.error);
+      }
     }
+    throw new Error(`Failed to purchase ticket: ${response.statusText}`);
   }
 };
 
@@ -265,18 +273,18 @@ export const listTickets = async (
     },
   });
 
-  const responseBody = await response.json();
-
   if (!response.ok) {
-    if (isErrorResponse(responseBody)) {
-      throw new Error(responseBody.error);
-    } else {
-      console.error(JSON.stringify(responseBody));
-      throw new Error("An unknown error occurred");
+    const contentType = response.headers.get("content-type");
+    if (contentType && contentType.includes("application/json")) {
+      const responseBody = await response.json();
+      if (isErrorResponse(responseBody)) {
+        throw new Error(responseBody.error);
+      }
     }
+    throw new Error(`Failed to list tickets: ${response.statusText}`);
   }
 
-  return responseBody as SpringBootPagination<TicketSummary>;
+  return (await response.json()) as SpringBootPagination<TicketSummary>;
 };
 
 export const getTicket = async (
@@ -291,18 +299,18 @@ export const getTicket = async (
     },
   });
 
-  const responseBody = await response.json();
-
   if (!response.ok) {
-    if (isErrorResponse(responseBody)) {
-      throw new Error(responseBody.error);
-    } else {
-      console.error(JSON.stringify(responseBody));
-      throw new Error("An unknown error occurred");
+    const contentType = response.headers.get("content-type");
+    if (contentType && contentType.includes("application/json")) {
+      const responseBody = await response.json();
+      if (isErrorResponse(responseBody)) {
+        throw new Error(responseBody.error);
+      }
     }
+    throw new Error(`Failed to get ticket: ${response.statusText}`);
   }
 
-  return responseBody as TicketDetails;
+  return (await response.json()) as TicketDetails;
 };
 
 export const getTicketQr = async (
@@ -336,18 +344,21 @@ export const validateTicket = async (
     body: JSON.stringify(request),
   });
 
-  const responseBody = await response.json();
-
   if (!response.ok) {
-    if (isErrorResponse(responseBody)) {
-      throw new Error(responseBody.error);
-    } else {
-      console.error(JSON.stringify(responseBody));
-      throw new Error("An unknown error occurred");
+    if (response.status === 403) {
+      throw new Error("Access denied: You do not have permission to validate tickets.");
     }
+    const contentType = response.headers.get("content-type");
+    if (contentType && contentType.includes("application/json")) {
+      const responseBody = await response.json();
+      if (isErrorResponse(responseBody)) {
+        throw new Error(responseBody.error);
+      }
+    }
+    throw new Error(`Failed to validate ticket: ${response.statusText}`);
   }
 
-  return responseBody as Promise<TicketValidationResponse>;
+  return (await response.json()) as Promise<TicketValidationResponse>;
 };
 
 export const cancelTicket = async (
@@ -363,7 +374,14 @@ export const cancelTicket = async (
   });
 
   if (!response.ok) {
-    throw new Error("Failed to cancel ticket");
+    const contentType = response.headers.get("content-type");
+    if (contentType && contentType.includes("application/json")) {
+      const responseBody = await response.json();
+      if (isErrorResponse(responseBody)) {
+        throw new Error(responseBody.error);
+      }
+    }
+    throw new Error(`Failed to cancel ticket: ${response.statusText}`);
   }
 };
 
@@ -379,7 +397,17 @@ export const getEventStats = async (
   });
 
   if (!response.ok) {
-    throw new Error("Failed to fetch event stats");
+    if (response.status === 403) {
+      throw new Error("Access denied: You do not have permission to view stats for this event.");
+    }
+    const contentType = response.headers.get("content-type");
+    if (contentType && contentType.includes("application/json")) {
+      const responseBody = await response.json();
+      if (isErrorResponse(responseBody)) {
+        throw new Error(responseBody.error);
+      }
+    }
+    throw new Error(`Failed to fetch event stats: ${response.statusText}`);
   }
 
   return await response.json();
@@ -399,7 +427,17 @@ export const getEventAttendees = async (
   });
 
   if (!response.ok) {
-    throw new Error("Failed to fetch event attendees");
+    if (response.status === 403) {
+      throw new Error("Access denied: You do not have permission to view attendees for this event.");
+    }
+    const contentType = response.headers.get("content-type");
+    if (contentType && contentType.includes("application/json")) {
+      const responseBody = await response.json();
+      if (isErrorResponse(responseBody)) {
+        throw new Error(responseBody.error);
+      }
+    }
+    throw new Error(`Failed to fetch event attendees: ${response.statusText}`);
   }
 
   return await response.json();

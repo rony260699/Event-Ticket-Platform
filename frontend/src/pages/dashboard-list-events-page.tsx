@@ -235,7 +235,7 @@ const DashboardListEventsPage: React.FC = () => {
                           className="flex gap-2 text-gray-400"
                         >
                           <span>{ticketType.name}</span>
-                          <span>${ticketType.price}</span>
+                          <span>৳{ticketType.price}</span>
                         </li>
                       ))}
                     </ul>

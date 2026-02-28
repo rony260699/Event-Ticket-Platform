@@ -16,6 +16,8 @@ public interface TicketRepository extends JpaRepository<Ticket, UUID> {
 
   int countByTicketTypeId(UUID ticketTypeId);
 
+  int countByTicketTypeIdAndStatus(UUID ticketTypeId, TicketStatusEnum status);
+
   long countByTicketTypeEventId(UUID eventId);
 
   @Query("SELECT SUM(t.pricePaid) FROM Ticket t WHERE t.ticketType.event.id = :eventId")
@@ -35,9 +37,8 @@ public interface TicketRepository extends JpaRepository<Ticket, UUID> {
   @Query("SELECT t FROM Ticket t " +
       "LEFT JOIN t.validations v ON v.status = 'VALID' " +
       "WHERE t.purchaser.id = :purchaserId " +
-      "AND t.status = :status " +
       "AND (t.ticketType.event.end IS NULL OR t.ticketType.event.end > CURRENT_TIMESTAMP) " +
       "GROUP BY t.id " +
       "HAVING COUNT(v.id) = 0")
-  Page<Ticket> findActiveTicketsByPurchaserId(UUID purchaserId, TicketStatusEnum status, Pageable pageable);
+  Page<Ticket> findActiveTicketsByPurchaserId(UUID purchaserId, Pageable pageable);
 }

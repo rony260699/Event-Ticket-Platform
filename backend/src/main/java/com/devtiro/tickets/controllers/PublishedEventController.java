@@ -66,7 +66,8 @@ public class PublishedEventController {
     for (int i = 0; i < ticketTypes.size(); i++) {
       TicketType ticketType = ticketTypes.get(i);
       Integer totalAvailable = ticketType.getTotalAvailable();
-      int purchased = ticketRepository.countByTicketTypeId(ticketType.getId());
+      int purchased = ticketRepository.countByTicketTypeIdAndStatus(ticketType.getId(),
+          com.devtiro.tickets.domain.entities.TicketStatusEnum.PURCHASED);
       int available = (totalAvailable != null) ? Math.max(0, totalAvailable - purchased) : -1;
       ticketTypeDtos.get(i).setAvailableTickets(available);
     }

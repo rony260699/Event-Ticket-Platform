@@ -75,7 +75,7 @@ const PublishedEventsPage: React.FC = () => {
         {isAuthenticated ? (
           <div className="flex gap-4">
             <Button
-              onClick={() => navigate("/dashboard/events")}
+              onClick={() => navigate("/dashboard")}
               className="cursor-pointer"
             >
               Dashboard
@@ -139,7 +139,7 @@ const PublishedEventsPage: React.FC = () => {
                           </span>
                         ) : null}
                         <span className="text-xl font-bold ">
-                          ${ticketType.price}
+                          ৳{ticketType.price}
                         </span>
                       </div>
                     </div>
@@ -160,7 +160,7 @@ const PublishedEventsPage: React.FC = () => {
               <h2 className="text-2xl font-bold">{selectedTicketType?.name}</h2>
               <div className="mb-6">
                 <span className="text-3xl font-bold">
-                  ${selectedTicketType?.price}
+                  ৳{selectedTicketType?.price}
                 </span>
               </div>
               {selectedTicketType?.availableTickets !== undefined && selectedTicketType.availableTickets !== -1 && (

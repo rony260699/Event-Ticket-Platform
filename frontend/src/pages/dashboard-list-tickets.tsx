@@ -1,11 +1,22 @@
 import NavBar from "@/components/nav-bar";
 import { SimplePagination } from "@/components/simple-pagination";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { SpringBootPagination, TicketSummary } from "@/domain/domain";
 import { cancelTicket, listTickets } from "@/lib/api";
-import { AlertCircle, DollarSign, Tag, Ticket as TicketIcon } from "lucide-react";
+import { AlertCircle, Tag, Ticket as TicketIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useAuth } from "react-oidc-context";
 import { Link } from "react-router";
@@ -40,8 +51,7 @@ const DashboardListTickets: React.FC = () => {
     fetchTickets();
   }, [isLoading, user?.access_token, page]);
 
-  const handleCancel = async (e: React.MouseEvent, ticketId: string) => {
-    e.preventDefault();
+  const handleCancel = async (ticketId: string) => {
     if (!user?.access_token) return;
 
     try {
@@ -77,67 +87,96 @@ const DashboardListTickets: React.FC = () => {
 
       <div className="max-w-lg mx-auto space-y-4 px-4">
         {tickets?.content.map((ticketItem) => (
-          <Link key={ticketItem.id} to={`/dashboard/tickets/${ticketItem.id}`}>
-            <Card className="bg-gray-900 text-white border-gray-800 hover:border-gray-700 transition-colors">
-              <CardHeader>
-                <div className="flex justify-between items-start">
-                  <div className="space-y-1">
-                    <div className="flex items-center gap-2">
-                      <TicketIcon className="h-5 w-5 text-purple-400" />
-                      <h3 className="font-bold text-xl">
-                        {ticketItem.ticketType.eventName}
-                      </h3>
+          <div key={ticketItem.id} className="relative group">
+            <Link to={`/dashboard/tickets/${ticketItem.id}`} className="block">
+              <Card className="bg-gray-900 text-white border-gray-800 hover:border-gray-700 transition-colors">
+                <CardHeader>
+                  <div className="flex justify-between items-start">
+                    <div className="space-y-1">
+                      <div className="flex items-center gap-2">
+                        <TicketIcon className="h-5 w-5 text-purple-400" />
+                        <h3 className="font-bold text-xl">
+                          {ticketItem.ticketType.eventName}
+                        </h3>
+                      </div>
+                      <p className="text-gray-400 text-sm ml-7">
+                        {ticketItem.ticketType.name}
+                      </p>
                     </div>
-                    <p className="text-gray-400 text-sm ml-7">
-                      {ticketItem.ticketType.name}
-                    </p>
-                  </div>
-                  <span
-                    className={`text-xs px-2 py-1 rounded-full font-medium ${ticketItem.status === "PURCHASED" ? "bg-green-900 text-green-200" :
+                    <span
+                      className={`text-xs px-2 py-1 rounded-full font-medium ${ticketItem.status === "PURCHASED" ? "bg-green-900 text-green-200" :
                         ticketItem.status === "REFUND_PENDING" ? "bg-amber-900 text-amber-200" :
                           ticketItem.status === "CANCELLED" ? "bg-red-900 text-red-200" :
                             "bg-gray-800 text-gray-300"
-                      }`}
-                  >
-                    {ticketItem.status}
-                  </span>
-                </div>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="flex justify-between items-end">
-                  <div className="space-y-4">
-                    {/* Price */}
-                    <div className="flex items-center gap-2">
-                      <DollarSign className="h-5 w-5 text-gray-400" />
-                      <p className="font-medium">${ticketItem.ticketType.price}</p>
-                    </div>
+                        }`}
+                    >
+                      {ticketItem.status}
+                    </span>
+                  </div>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="flex justify-between items-end">
+                    <div className="space-y-4">
+                      {/* Price */}
+                      <div className="flex items-center gap-2">
+                        <span className="h-5 w-5 text-gray-400 font-bold text-lg leading-none">৳</span>
+                        <p className="font-medium">{ticketItem.ticketType.price}</p>
+                      </div>
 
-                    {/* Ticket ID */}
-                    <div className="flex items-center gap-2">
-                      <Tag className="h-5 w-5 text-gray-400" />
-                      <div>
-                        <h4 className="font-medium">Ticket ID</h4>
-                        <p className="text-gray-400 font-mono text-sm">
-                          {ticketItem.id}
-                        </p>
+                      {/* Ticket ID */}
+                      <div className="flex items-center gap-2">
+                        <Tag className="h-5 w-5 text-gray-400" />
+                        <div>
+                          <h4 className="font-medium">Ticket ID</h4>
+                          <p className="text-gray-400 font-mono text-sm">
+                            {ticketItem.id}
+                          </p>
+                        </div>
                       </div>
                     </div>
+                    {/* Spacer for the absolute positioned button */}
+                    <div className="w-24 h-9" />
                   </div>
+                </CardContent>
+              </Card>
+            </Link>
 
-                  {ticketItem.status === "PURCHASED" && (
+            {ticketItem.status === "PURCHASED" && (
+              <div className="absolute bottom-6 right-6">
+                <AlertDialog>
+                  <AlertDialogTrigger asChild>
                     <Button
                       variant="destructive"
                       size="sm"
-                      onClick={(e) => handleCancel(e, ticketItem.id)}
                       className="cursor-pointer"
                     >
                       Cancel Ticket
                     </Button>
-                  )}
-                </div>
-              </CardContent>
-            </Card>
-          </Link>
+                  </AlertDialogTrigger>
+                  <AlertDialogContent className="bg-gray-900 text-white border-gray-800">
+                    <AlertDialogHeader>
+                      <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                      <AlertDialogDescription className="text-gray-400">
+                        This action cannot be undone. This will permanently cancel your
+                        ticket and a refund will be processed according to the policy.
+                      </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                      <AlertDialogCancel className="bg-transparent border-gray-700 hover:bg-gray-800">
+                        No, keep ticket
+                      </AlertDialogCancel>
+                      <AlertDialogAction
+                        onClick={() => handleCancel(ticketItem.id)}
+                        className="bg-red-600 hover:bg-red-700 text-white border-none"
+                      >
+                        Yes, cancel ticket
+                      </AlertDialogAction>
+                    </AlertDialogFooter>
+                  </AlertDialogContent>
+                </AlertDialog>
+              </div>
+            )}
+          </div>
         ))}
       </div>
       <div className="flex justify-center py-8">

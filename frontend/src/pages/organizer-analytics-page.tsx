@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { EventStats } from "@/domain/domain";
 import { getEventStats } from "@/lib/api";
-import { AlertCircle, ArrowLeft, ArrowRight, BarChart3, DollarSign, Ticket, Users } from "lucide-react";
+import { AlertCircle, ArrowLeft, ArrowRight, BarChart3, Ticket, Users } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useAuth } from "react-oidc-context";
 import { Link, useNavigate, useParams } from "react-router";
@@ -111,10 +111,10 @@ const OrganizerAnalyticsPage: React.FC = () => {
                     <Card className="bg-gray-900 border-gray-800 text-white">
                         <CardHeader className="flex flex-row items-center justify-between pb-2">
                             <CardTitle className="text-sm font-medium text-gray-400">Total Revenue</CardTitle>
-                            <DollarSign className="h-5 w-5 text-yellow-400" />
+                            <span className="h-5 w-5 text-yellow-400 font-bold text-xl leading-none">৳</span>
                         </CardHeader>
                         <CardContent>
-                            <div className="text-4xl font-bold">${stats?.totalRevenue.toLocaleString()}</div>
+                            <div className="text-4xl font-bold">৳{stats?.totalRevenue.toLocaleString()}</div>
                             <p className="text-xs text-gray-500 mt-1">Direct sales and processing</p>
                         </CardContent>
                     </Card>

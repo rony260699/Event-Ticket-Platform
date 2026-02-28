@@ -146,7 +146,7 @@ export default function OrganizerAttendeesPage() {
                                                 </Badge>
                                             </TableCell>
                                             <TableCell className="font-medium">
-                                                ${attendee.pricePaid.toFixed(2)}
+                                                ৳{attendee.pricePaid.toFixed(2)}
                                             </TableCell>
                                             <TableCell className="text-muted-foreground">
                                                 {format(new Date(attendee.purchasedAt), "MMM d, yyyy HH:mm")}

@@ -26,7 +26,7 @@ public class TicketServiceImpl implements TicketService {
 
   @Override
   public Page<Ticket> listTicketsForUser(UUID userId, Pageable pageable) {
-    return ticketRepository.findActiveTicketsByPurchaserId(userId, TicketStatusEnum.PURCHASED, pageable);
+    return ticketRepository.findActiveTicketsByPurchaserId(userId, pageable);
   }
 
   @Override

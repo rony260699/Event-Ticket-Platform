@@ -23,22 +23,18 @@ public class UpdateEventRequestDto {
   private String name;
 
   @NotNull(message = "Event start date is required")
-  @Future(message = "Event start date must be in the future")
   private LocalDateTime start;
 
   @NotNull(message = "Event end date is required")
-  @Future(message = "Event end date must be in the future")
   private LocalDateTime end;
 
   @NotBlank(message = "Venue information is required")
   private String venue;
 
   @NotNull(message = "Sales start date is required")
-  @FutureOrPresent(message = "Sales start date must be in the future or present")
   private LocalDateTime salesStart;
 
   @NotNull(message = "Sales end date is required")
-  @Future(message = "Sales end date must be in the future")
   private LocalDateTime salesEnd;
 
   @NotNull(message = "Event status must be provided")

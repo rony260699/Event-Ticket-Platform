@@ -453,6 +453,16 @@ const DashboardManageEventPage: React.FC = () => {
       return;
     }
 
+    if (currentTicketType.price < 0) {
+      setError("Ticket price cannot be negative.");
+      return;
+    }
+
+    if (currentTicketType.totalAvailable && currentTicketType.totalAvailable < 0) {
+      setError("Total available tickets cannot be negative.");
+      return;
+    }
+
     const newTicketTypes = [...eventData.ticketTypes];
 
     if (currentTicketType.id) {
@@ -681,7 +691,7 @@ const DashboardManageEventPage: React.FC = () => {
                                 variant="outline"
                                 className="border-gray-600 text-white font-normal text-xs"
                               >
-                                ${ticketType.price}
+                                ৳{ticketType.price}
                               </Badge>
                             </div>
                             {ticketType.totalAvailable && (
@@ -760,6 +770,7 @@ const DashboardManageEventPage: React.FC = () => {
                           )
                         }
                         className="bg-gray-800 border-gray-700"
+                        min="0"
                       />
                     </div>
 
@@ -785,6 +796,7 @@ const DashboardManageEventPage: React.FC = () => {
                           )
                         }
                         className="bg-gray-800 border-gray-700"
+                        min="0"
                       />
                     </div>
                   </div>

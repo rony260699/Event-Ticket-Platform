@@ -136,8 +136,8 @@ const PurchaseTicketPage: React.FC = () => {
                     key={method}
                     onClick={() => setPaymentMethod(method)}
                     className={`p-3 rounded-2xl border-2 transition-all flex flex-col items-center justify-center space-y-1 ${paymentMethod === method
-                        ? "border-purple-600 bg-purple-50 text-purple-600 ring-4 ring-purple-100"
-                        : "border-gray-100 hover:border-purple-200 text-gray-400"
+                      ? "border-purple-600 bg-purple-50 text-purple-600 ring-4 ring-purple-100"
+                      : "border-gray-100 hover:border-purple-200 text-gray-400"
                       }`}
                   >
                     {method === "CARD" && <CreditCard className="h-6 w-6" />}

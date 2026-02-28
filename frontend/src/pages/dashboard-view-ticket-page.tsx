@@ -2,7 +2,7 @@ import NavBar from "@/components/nav-bar";
 import { TicketDetails, TicketStatus } from "@/domain/domain";
 import { getTicket, getTicketQr } from "@/lib/api";
 import { format } from "date-fns";
-import { Calendar, DollarSign, MapPin, Tag } from "lucide-react";
+import { Calendar, MapPin, Tag } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useAuth } from "react-oidc-context";
 import { useParams } from "react-router";
@@ -158,8 +158,8 @@ const DashboardViewTicketPage: React.FC = () => {
                 <Tag className="w-5 text-purple-200" />
                 <span className="font-semibold">{ticket.description}</span>
               </div>
-              <div className="flex items-center gap-2">
-                <DollarSign className="w-5 text-purple-200" />
+              <div className="flex items-center gap-2 text-purple-200">
+                <span className="w-5 text-xl font-bold leading-none">৳</span>
                 <span className="font-semibold">{ticket.price}</span>
               </div>
             </div>

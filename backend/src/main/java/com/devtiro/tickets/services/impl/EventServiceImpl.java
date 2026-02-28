@@ -77,24 +77,26 @@ public class EventServiceImpl implements EventService {
     eventToCreate.setOrganizer(organizer);
     eventToCreate.setTicketTypes(ticketTypesToCreate);
 
-    validateDates(eventToCreate.getStart(), eventToCreate.getSalesStart(), eventToCreate.getSalesEnd());
+    validateDates(eventToCreate.getStart(), eventToCreate.getSalesStart(), eventToCreate.getSalesEnd(), false);
 
     return eventRepository.save(eventToCreate);
   }
 
-  private void validateDates(LocalDateTime start, LocalDateTime salesStart, LocalDateTime salesEnd) {
+  private void validateDates(LocalDateTime start, LocalDateTime salesStart, LocalDateTime salesEnd, boolean isUpdate) {
     if (start == null || salesStart == null || salesEnd == null) {
       throw new IllegalArgumentException("Event start, sales start, and sales end dates are required");
     }
 
     LocalDateTime now = LocalDateTime.now();
 
-    if (start.isBefore(now)) {
-      throw new IllegalArgumentException("Event start date must be in the future");
-    }
+    if (!isUpdate) {
+      if (start.isBefore(now)) {
+        throw new IllegalArgumentException("Event start date must be in the future");
+      }
 
-    if (salesStart.isBefore(now)) {
-      throw new IllegalArgumentException("Ticket sales start date must be in the future");
+      if (salesStart.isBefore(now)) {
+        throw new IllegalArgumentException("Ticket sales start date must be in the future");
+      }
     }
 
     if (salesEnd.isAfter(start)) {
@@ -141,7 +143,7 @@ public class EventServiceImpl implements EventService {
     existingEvent.setStatus(event.getStatus());
     existingEvent.setCategory(event.getCategory());
 
-    validateDates(existingEvent.getStart(), existingEvent.getSalesStart(), existingEvent.getSalesEnd());
+    validateDates(existingEvent.getStart(), existingEvent.getSalesStart(), existingEvent.getSalesEnd(), true);
 
     Set<UUID> requestTicketTypeIds = event.getTicketTypes()
         .stream()
