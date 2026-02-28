@@ -41,6 +41,7 @@ const PurchaseTicketPage: React.FC = () => {
     if (paymentMethod === "CARD") {
       if (cardNo.length < 16) return "Please enter a valid card number";
       if (!cardName) return "Please enter cardholder name";
+      if (/[^a-zA-Z\s]/.test(cardName)) return "Cardholder name should only contain letters and spaces";
     } else {
       if (mobileNo.length < 11) return "Please enter a valid mobile number";
     }
@@ -170,9 +171,9 @@ const PurchaseTicketPage: React.FC = () => {
                     <Label className="text-gray-600 text-sm font-medium">Cardholder Name</Label>
                     <Input
                       type="text"
-                      placeholder="e.g. Rony Ahmed"
+                      placeholder="e.g. Rony Howlader"
                       value={cardName}
-                      onChange={(e) => setCardName(e.target.value)}
+                      onChange={(e) => setCardName(e.target.value.replace(/[^a-zA-Z\s]/g, ""))}
                       className="bg-gray-100 border-none rounded-xl text-black h-12 focus:ring-2 focus:ring-purple-200"
                     />
                   </div>
