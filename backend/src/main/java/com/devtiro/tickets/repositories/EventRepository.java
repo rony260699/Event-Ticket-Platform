@@ -20,16 +20,20 @@ public interface EventRepository extends JpaRepository<Event, UUID> {
 
   boolean existsByIdAndOrganizerId(UUID id, UUID organizerId);
 
-  Page<Event> findByStatus(EventStatusEnum status, Pageable pageable);
+  @Query("SELECT e FROM Event e WHERE e.status = :status AND e.end >= CURRENT_TIMESTAMP")
+  Page<Event> findByStatus(@Param("status") EventStatusEnum status, Pageable pageable);
 
   @Query(value = "SELECT * FROM events WHERE " +
       "status = 'PUBLISHED' AND " +
+      "event_end >= CURRENT_TIMESTAMP AND " +
       "to_tsvector('english', COALESCE(name, '') || ' ' || COALESCE(venue, '') || ' ' || COALESCE(category, '')) " +
       "@@ plainto_tsquery('english', :searchTerm)", countQuery = "SELECT count(*) FROM events WHERE " +
           "status = 'PUBLISHED' AND " +
+          "event_end >= CURRENT_TIMESTAMP AND " +
           "to_tsvector('english', COALESCE(name, '') || ' ' || COALESCE(venue, '') || ' ' || COALESCE(category, '')) " +
           "@@ plainto_tsquery('english', :searchTerm)", nativeQuery = true)
   Page<Event> searchEvents(@Param("searchTerm") String searchTerm, Pageable pageable);
 
-  Optional<Event> findByIdAndStatus(UUID id, EventStatusEnum status);
+  @Query("SELECT e FROM Event e WHERE e.id = :id AND e.status = :status AND e.end >= CURRENT_TIMESTAMP")
+  Optional<Event> findByIdAndStatus(@Param("id") UUID id, @Param("status") EventStatusEnum status);
 }

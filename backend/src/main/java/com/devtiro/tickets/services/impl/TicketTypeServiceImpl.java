@@ -1,6 +1,7 @@
 package com.devtiro.tickets.services.impl;
 
 import com.devtiro.tickets.domain.dtos.PurchaseTicketRequestDto;
+import com.devtiro.tickets.domain.entities.Event;
 import com.devtiro.tickets.domain.entities.Ticket;
 import com.devtiro.tickets.domain.entities.TicketStatusEnum;
 import com.devtiro.tickets.domain.entities.TicketType;
@@ -15,6 +16,7 @@ import com.devtiro.tickets.services.EmailService;
 import com.devtiro.tickets.services.QrCodeService;
 import com.devtiro.tickets.services.TicketTypeService;
 import jakarta.transaction.Transactional;
+import java.time.LocalDateTime;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -46,6 +48,29 @@ public class TicketTypeServiceImpl implements TicketTypeService {
 
     if (purchasedTickets + 1 > totalAvailable) {
       throw new TicketsSoldOutException();
+    }
+
+    Event event = ticketType.getEvent();
+    LocalDateTime now = LocalDateTime.now();
+
+    if (event.getSalesStart() != null) {
+      if (now.isBefore(event.getSalesStart())) {
+        throw new IllegalArgumentException("Ticket sales have not started yet");
+      }
+    } else {
+      // If salesStart is null, we should probably assume it hasn't started if it's a
+      // required field,
+      // but for now let's just log it. If the user wants strict adherence, we should
+      // ensure it's not null.
+      log.warn("Event {} has no salesStart date", event.getId());
+    }
+
+    if (event.getSalesEnd() != null) {
+      if (now.isAfter(event.getSalesEnd())) {
+        throw new IllegalArgumentException("Ticket sales have ended");
+      }
+    } else {
+      log.warn("Event {} has no salesEnd date", event.getId());
     }
 
     log.info("Processing payment for user {} using method: {} and transaction: {}",

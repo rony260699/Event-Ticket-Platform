@@ -86,6 +86,8 @@ export interface PublishedEventSummary {
   end?: Date;
   venue: string;
   category: string;
+  salesStart?: Date;
+  salesEnd?: Date;
 }
 
 export interface TicketTypeDetails {
@@ -157,6 +159,8 @@ export interface PublishedEventDetails {
   end?: Date;
   venue: string;
   category: string;
+  salesStart?: Date;
+  salesEnd?: Date;
   ticketTypes: PublishedEventTicketTypeDetails[];
 }
 

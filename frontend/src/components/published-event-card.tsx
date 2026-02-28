@@ -14,7 +14,12 @@ const PublishedEventCard: React.FC<PublishedEventCardProperties> = ({
 }) => {
   return (
     <Link to={`/events/${publishedEvent.id}`} className="block w-fit">
-      <Card className="py-0 overflow-hidden max-w-[240px] gap-2">
+      <Card className="py-0 overflow-hidden max-w-[240px] gap-2 relative">
+        {publishedEvent.salesStart && new Date() < new Date(publishedEvent.salesStart) && (
+          <div className="absolute top-2 right-2 z-10 bg-blue-600 text-white text-[10px] font-bold px-2 py-0.5 rounded shadow-lg animate-pulse">
+            COMING SOON
+          </div>
+        )}
         {/* Card Image */}
         <div className="h-[140px]">
           <RandomEventImage />

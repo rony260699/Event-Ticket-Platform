@@ -11,6 +11,7 @@ import { AlertCircle, MapPin } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useAuth } from "react-oidc-context";
 import { Link, useNavigate, useParams } from "react-router";
+import { format, isBefore, isAfter } from "date-fns";
 
 const PublishedEventsPage: React.FC = () => {
   const { isAuthenticated, isLoading, signinRedirect, signoutRedirect } =
@@ -175,17 +176,53 @@ const PublishedEventsPage: React.FC = () => {
                   )}
                 </div>
               )}
-              <div className="mb-6">
-                <p className="text-gray-300">
-                  {selectedTicketType?.description}
-                </p>
-              </div>
+              {publishedEvent?.salesStart && isBefore(new Date(), new Date(publishedEvent.salesStart)) ? (
+                <div className="mb-6">
+                  <Alert className="bg-blue-900 border-blue-700 text-blue-100">
+                    <AlertCircle className="h-4 w-4" />
+                    <AlertTitle>Sales haven't started</AlertTitle>
+                    <AlertDescription>
+                      Ticket sales for this event will start on {format(new Date(publishedEvent.salesStart), "PPpp")}.
+                    </AlertDescription>
+                  </Alert>
+                </div>
+              ) : publishedEvent?.salesEnd && isAfter(new Date(), new Date(publishedEvent.salesEnd)) ? (
+                <div className="mb-6">
+                  <Alert className="bg-yellow-900 border-yellow-700 text-yellow-100">
+                    <AlertCircle className="h-4 w-4" />
+                    <AlertTitle>Sales ended</AlertTitle>
+                    <AlertDescription>
+                      Ticket sales for this event ended on {format(new Date(publishedEvent.salesEnd), "PPpp")}.
+                    </AlertDescription>
+                  </Alert>
+                </div>
+              ) : (
+                <div className="mb-6">
+                  <p className="text-gray-300">
+                    {selectedTicketType?.description}
+                  </p>
+                </div>
+              )}
               {selectedTicketType?.availableTickets !== undefined && selectedTicketType.availableTickets !== -1 && selectedTicketType.availableTickets <= 0 ? (
                 <Button
                   className="w-full bg-gray-600 text-gray-400 cursor-not-allowed"
                   disabled
                 >
                   Sold Out
+                </Button>
+              ) : publishedEvent?.salesStart && isBefore(new Date(), new Date(publishedEvent.salesStart)) ? (
+                <Button
+                  className="w-full bg-gray-600 text-gray-400 cursor-not-allowed"
+                  disabled
+                >
+                  Sales Not Started
+                </Button>
+              ) : publishedEvent?.salesEnd && isAfter(new Date(), new Date(publishedEvent.salesEnd)) ? (
+                <Button
+                  className="w-full bg-gray-600 text-gray-400 cursor-not-allowed"
+                  disabled
+                >
+                  Sales Ended
                 </Button>
               ) : (
                 <Link

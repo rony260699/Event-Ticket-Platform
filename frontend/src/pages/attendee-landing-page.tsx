@@ -142,31 +142,7 @@ const AttendeeLandingPage: React.FC = () => {
                   <Search />
                 </Button>
               </div>
-              <div className="flex gap-2 items-center">
-                <Select value={category} onValueChange={setCategory}>
-                  <SelectTrigger className="bg-white text-black w-[200px]">
-                    <SelectValue placeholder="All Categories" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="Music">Music</SelectItem>
-                    <SelectItem value="Comedy">Comedy</SelectItem>
-                    <SelectItem value="Tech">Tech</SelectItem>
-                    <SelectItem value="Business">Business</SelectItem>
-                    <SelectItem value="Sports">Sports</SelectItem>
-                    <SelectItem value="Other">Other</SelectItem>
-                  </SelectContent>
-                </Select>
-                {category && (
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    onClick={() => setCategory("")}
-                    className="text-white hover:bg-gray-800"
-                  >
-                    <X className="h-4 w-4" />
-                  </Button>
-                )}
-              </div>
+
             </div>
           </div>
         </div>
